@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static%}
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %} {% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="-1"/>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!--<script src="{% static 'js/wheelzoom.js' %} "></script> -->
+    <script src="{% static 'js/dcim.js' %} "></script>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Peralta" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../4/materia/bootstrap.css">
+    <link rel="stylesheet" href="../_assets/css/custom.min.css"> -->
+  	<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23019901-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-23019901-1');
+    </script>
+  </head>
+  <body>
+    <!-- Navegacion home -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="{% url 'home' %}">Myocardial Perfusion</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'home' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'upload' %}">Test</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'upload' %}">How to use Myocardial Perfusion </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'list' %}">FAQ</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- bloque cambiante-->
+
+    <style>
+      div[class^='col-']{
+        border: 5px solid #303030;
+      }
+      .verde{
+        background-color: green;
+        height: 80px;
+      }
+      .rojo {
+        background-color: red;
+        height: 300px;
+      }
+      .rosa{
+        background-color: violet;
+        height: 80px;
+      }
+      .azul{
+        background-color: #375a7f;
+        height: 80px;
+      }
+      
+
+
+    </style>
+           {% block content %}
+         <!---   <form method="post" enctype="multipart/form-data" style="margin-top:40px;margin-bottom:50px;" action="../process_file" id="form_one">
+                        <span class="btn btn-default btn-file">
+                            Upload Res <input type="file" name="imgInp" id="imgInp" webkitdirectory multiple accept="">
+                        </span>
+                    </span>
+                    <input type="text" class="form-control" readonly>  
+            </form> -->
+            <div class="row">
+              <div class="col-12 azul">
+                <br>
+               <center><h4>Select the image to analyze</h4></center>
+              </div>
+              <div class="col-12 ">
+                <table border=1 width=100% align="center">
+                  <tr>
+                    <td align="center">
+                      Rest
+                  </td>
+                  <td align="center">
+                      Stress
+                  </td>
+                  </tr>
+                <tr>
+                <td>
+               <form method="post" enctype="multipart/form-data" style="margin-top:40px;margin-bottom:50px;" action="../process_file" id="form_one">
+                        <span class="btn btn-default btn-file">
+                            Upload Rest <input type="file" name="imgInp" id="imgInp" webkitdirectory multiple accept="">
+                        </span>
+                    </span>
+                </td>
+                <td>
+                        <span class="btn btn-default btn-file">
+                            Upload Stress <input type="file" name="imgInpStress" id="imgInpStress" webkitdirectory multiple accept="">
+                        </span>
+                    </span>
+                  </form>
+              </td>
+              </tr>
+              <tr>
+          {% block imagen %}
+                    <td align="center">
+                      <img id='img_upload' style="text-align:center; width:600px;
+                      margin-top:40px;
+                      box-shadow:16px 15px 28px 1px rgba(0,0,0,.75)" />
+                    </td>
+                    <td align="center">
+                      <img id='img_uploadStress' style="text-align:center; width:600px;
+                      margin-top:40px;
+                      box-shadow:16px 15px 28px 1px rgba(0,0,0,.75)" />
+                    </td>
+          {% endblock %}
+        </tr>
+                </table>
+                </div>
+               <div class="col-12 azul">
+                 <br>
+                <center><button type="button" class="btn btn-primary">Process Images </button></center>
+      
+               </div>
+          </div>
+
+
+
+            {% endblock %}
+
+<!-- <table class="table" cellspacing="0" >
+    <tbody>
+        <tr>
+            <td>
+             <div class="">
+
+                <img id='img_upload' style="text-align:center; width:600px;
+                margin-top:40px;
+                box-shadow:16px 15px 28px 1px rgba(0,0,0,.75)" />
+
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table> -->
+
+
+
+<footer id="footer">
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Author: Sebastian Retamal Contreras</p>
+        </div>
+      </div>
+    </footer>
+
+    </body>
+</html>
+

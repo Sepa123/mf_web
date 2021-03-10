@@ -1,0 +1,181 @@
+{% extends "mf_webApp/base.html" %}
+
+{% block title %} Results Images {% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <!-- Resultados procesamiento imagenes
+    div[class^='col-']{
+        border: 5px solid white;
+        background-color: #375a7f;
+      }
+    -->
+    <br>
+      <style>
+      .verde{
+        background-color: green;
+        height: 80px;
+      }
+      .rojo {
+        background-color: rgb(152, 224, 252);
+        height: 500px;
+      }
+      .rosa{
+        background-color: violet;
+        height: 80px;
+      }
+      .naranja{
+        
+        height: 550px;
+      }
+      .azul{
+        
+        height: 80px;
+      }
+      .celeste{
+        
+        height: 550px;
+      }
+
+    </style>
+
+    <!-- Container-->
+    <div class="row">
+      <!-- Datos Paciente y grafico -->
+       <!-- <div class="col-3 rojo ">
+          <h5>Informacion</h5> </br>
+          <table border=1 width=100%>
+            <tr>
+              <td>
+                Patient: <label for="">nombre</label>
+                <br>
+                Study Desc: <label for="">study_desc</label>
+                <br>
+                Series Desc: <label for="">serie_desc</label>
+                <br>
+                Series ID: <label for="">id_patient</label>
+                <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm">Blood</button>&nbsp;
+                <button type="button" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
+                <button type="button" class="btn btn-primary btn-sm">Endocardium</button>
+              </td>
+            </tr>
+            <tr>
+              <td >Rest Curve</td>
+            </tr>
+            <tr>
+              <td>Stress Curve</td>
+            </tr>
+          </table>
+        </div> -->
+        <!-- Imagenes subidas -->
+        <div class="col-10 naranja">
+           <table border=1 width=100% align="center">
+              <tr>
+                <td align="center">
+                  Rest image
+                </td>
+                <td align="center" >
+                   Stress image
+                </td>
+              </tr>
+              <tr height="510">
+                <td align="center" >
+                  <img id='img_rest' style="text-align:center;" width="200" height="200" />
+                </td>
+                <td align="center">
+                  <img id='img_stress' style="text-align:center;" width="200" height="200" />
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Resultados datos del grafico -->
+        <div class="col-2 celeste">
+          <br>
+           <table border=0 width=100%  >
+            <tr>
+              <td colspan="2">
+                <font size="2">Patient:  <label for="">nombre</label> </font>
+                <br>
+                <font size="2"> Study Desc: <label for="">study_desc</label> </font>
+                <br>
+                <font size="2">Series Desc: <label for="">serie_desc</label> </font>
+                <br>
+                <font size="2">Series ID: <label for="">id_patient</label> </font>
+                <br>
+              </td>
+            </tr>
+              <tr>
+               <td>Slice:</td>
+              </tr>
+              <tr>
+                <td>WW:</td>
+                <td><input type="text"></input></td>
+              </tr>
+              <tr>
+                <td>WL:</td>
+                <td><input type="text"></input></td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center"><button type="button" class="btn btn-primary btn-sm">Reload</button></td>
+              </tr>
+            </table>
+            <br><br><br><br>
+            <h3>Imaginese un grafico</h3>
+            <table border="1" width="80%">
+              <tr  align="center">
+                <td></td>
+                <td><font size="2">Rest Curve </font></td>
+                <td><font size="2">Stress Curve</font></td>    
+              </tr align="center">       
+              <tr align="center">        
+                <td><font size="2">Area</font></td>        
+                <td><font size="2">1.234</font></td>      
+                <td><font size="2">1.234</font></td>       
+              </tr>
+              <tr  align="center">
+                <td><font size="2">Peak</font></td>        
+                <td><font size="2">1.234</font></td>      
+                <td><font size="2">1.234</font></td>      
+              </tr>       
+              <tr  align="center">        
+                <td><font size="2">Slope</font></td>        
+                <td><font size="2">1.234</font></td>      
+                <td><font size="2">1.234</font></td>        
+              </tr>
+              <tr  align="center">        
+                <td><font size="2">Coefficient</font></td>        
+                <td colspan="2" align="center"><font size="2">1.234</font></td>        
+              </tr>       
+            </table>
+            <br>
+            <table border= width="100%" align="center">
+              <tr>
+                <td align="center">
+                  <button type="button" class="btn btn-primary btn-sm">Blood</button>&nbsp;
+                  <button type="button" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
+                  <button type="button" class="btn btn-primary btn-sm">Endocardium</button>
+                </td>
+              </tr>
+            </table>
+         </div>
+
+         <!--Botones -->
+         <div class="col-12 azul">
+           <br>
+          <center>
+            <button type="button" class="btn btn-primary">Export Results </button>
+            <button type="button" class="btn btn-primary">Divide Myocardium </button>
+            <button type="button" class="btn btn-primary">New Patient </button>
+          </center>
+
+         </div>
+    </div>
+
+
+{% endblock %}

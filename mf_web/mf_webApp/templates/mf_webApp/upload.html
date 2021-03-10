@@ -1,0 +1,80 @@
+{% extends "mf_webApp/base.html" %}
+
+{% block title %} Upload Image {% endblock %}
+{% load static %}
+
+{% block content %}
+      <br>
+      <style>
+      div[class^='col-']{
+        border: 5px solid white;
+      }
+      .verde{
+        background-color: green;
+        height: 80px;
+      }
+      .rojo {
+        background-color: red;
+        height: 300px;
+      }
+      .rosa{
+        background-color: violet;
+        height: 80px;
+      }
+      .naranja{
+        background-color: orange;
+        height: 300px;
+      }
+      .azul{
+        background-color: blue;
+        height: 80px;
+      }
+
+    </style>
+
+    <!-- Container-->
+    <!-- Botones Subir Imagenes -->
+    <div class="row">
+        <div class="col-3 rojo">
+          <h4>Select images</h4> </br>
+          <button type="file" class="btn btn-primary">Upload Rest</button> </br></br></br>
+          <button type="button" class="btn btn-primary">Upload Stress</button>
+        <!--  <form name="formulario" method="post" action="" enctype="multipart/form-data">
+            <input type="file" name="adjunto" accept=".dcm" multiple /> -->
+          </form>
+        </div>
+        <div class="col-4 naranja">
+           <table border=0 width=100% align="center">
+              <tr>
+                <td align="center">
+                  Rest
+                </td>
+              </tr>
+              <tr>
+                <td align="center" height=200>
+                  <img id='img_upload' style="text-align:center;" width="200" height="200" />
+                </td>
+              </tr>
+            </table>
+          </div>
+        <div class="col-4 naranja">
+           <table border=0 width=100%  align="center">
+              <tr>
+                <td align="center">
+                  Stress
+                </td>
+              </tr>
+              <tr>
+                <td align="center"  height=200>
+                  <img id='img_upload' style="text-align:center;" width="200" height="200" />
+                </td>
+              </tr>
+            </table>
+         </div>
+         <div class="col-11 azul">
+           <br>
+          <center><button type="button" class="btn btn-primary">Process Images </button></center>
+
+         </div>
+    </div>
+{% endblock %}
