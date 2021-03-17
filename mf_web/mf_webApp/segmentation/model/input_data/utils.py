@@ -148,6 +148,7 @@ def get_dicom_in_folder_and_slices(folder_path):
     n_slices = np.unique(slices_list).size
     image_array = np.stack(image_array, axis=2)
     image_array = image_array[:, :, np.newaxis, :]
+    print(" La cantidad de imagenes .dcm guardadas son: ",len(slices_list))
     return image_array, n_slices
 
 

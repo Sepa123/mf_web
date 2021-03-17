@@ -6,7 +6,7 @@ import tensorflow as tf
 #import tensorflow.compat.v1 as tf
 #tf.disable_v2_behavior()
 
-from segmentation.model.model.parameters import param_keys
+from mf_webApp.segmentation.model.model.parameters import param_keys
 
 class TrainIteratorBuilder(object):
 

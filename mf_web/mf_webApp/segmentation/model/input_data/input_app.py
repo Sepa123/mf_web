@@ -14,5 +14,6 @@ class InputDataApp:
         imgs, frames_drop = utils.split_slices(imgs, n_slices)  # XYZT
         imgs = utils.clip_norm(imgs)               # XYZT
         imgs = utils.zero_pad(imgs, IMAGE_SIZE)
-        imgs = np.transpose(imgs, (2, 3, 0, 1))    # XYZT -> ZTXY
+        imgs = np.transpose(imgs, (2, 3, 0, 1))   
+         # XYZT -> ZTXY
         return imgs, frames_drop

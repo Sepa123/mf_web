@@ -14,9 +14,27 @@ from django.http import JsonResponse
 
 from django.shortcuts import render, HttpResponse
 
+#Segmentation
+
+from .model.paq_img_model import PaqImgModel
+from .model.patient_data import Patient
+import numpy as np
+
+from .app_controller import * 
+
+import pickle
+
+
+from mf_webApp.screen.upload_image import UploadImage
+from .segmentation.model.model.models.u_net_fine_tuning import U_net_fine_tune as U_net
+from .segmentation.model.input_data.input_app import InputDataApp
+
 from mf_web import settings
 
-# Create your views here.
+#Codigo de segmentacion 
+
+#codigo para subir las imagenes
+
 
 #django-dicom-viewer proyecto
    
@@ -159,9 +177,95 @@ def upload_image(request):
     
     return render(request, "mf_webApp/upload.html")
 
+
+#def predict_ztxy(model, img_array):
+   #n_timesteps = img_array.shape[1]
+    #img_length = img_array.shape[2]
+    #img_flatten = img_array.reshape(-1, img_length, img_length)
+    #img_flatten = img_flatten[..., np.newaxis]
+    #results_flatten = model.predict(img_flatten)
+    #results_array = results_flatten.reshape(
+     #   -1, n_timesteps, img_length, img_length)
+    #return results_array
+
+#def predict_img():
+        
+        #print(os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model')
+        #checkpoint_path = os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model'
+
+        #model = U_net()
+        #model.saver.restore(model.sess, checkpoint_path)
+
+        #dataset_stress = InputDataApp('C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress')
+        #data_extract_stress, frames_drop_stress = dataset_stress.get_data()
+        #pred_stress = predict_ztxy(model, data_extract_stress)
+        #if frames_drop_stress == 0:
+         #   delete = False
+        #else:
+         #   delete = True
+        #img_stress = PaqImgModel("Stress")
+        #img_stress.agregar_predict(pred_stress, delete)
+        #pass
+        #dataset_rest = InputDataApp('C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress')
+        #data_extract_rest, frames_drop_rest = dataset_rest.get_data()
+        #pred_rest = predict_ztxy(model, data_extract_rest)
+        #if frames_drop_rest == 0:
+         #   delete = False
+        #else:
+         #   delete = True
+        #self.img_rest.agregar_predict(pred_rest, delete)
+        #print("Esto segmentaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 def result(request):
 
-    return render(request, "mf_webApp/result.html")
+    print("Pantalla Resultados de imagen")
+    apc = AppController()
+
+    upl = UploadImage(apc)
+
+    upl.subir_img_rest()
+    upl.subir_img_stress()
+
+    #ruta = 'C:\\Users\\Seba\\Desktop\\Test Images\\5342 Rest\\series'
+    #ruta = 'C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress\\series'
+    # C:\\Users\\Seba\\Desktop\\Test Images\\imgTest1
+
+    #apc.process_rest_img(ruta)
+    #apc.process_stress_img(ruta)
+
+    apc.process_img()
+
+    print("Tamos daos pal exito")
+
+    name_paciente = apc.patient.s_name
+    series_id_patient = apc.patient.s_series_id
+    series_des_patient = apc.patient.s_series_desc
+    study_patient = apc.patient.s_study_desc
+
+    data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
+                    "study_pat":study_patient,}
+
+    print("Nombre paciente: ",name_paciente)
+    print("Series id paciente: ",series_id_patient)
+    print("series des paciente: ",series_des_patient)
+    print("estudio paciente: ",study_patient) 
+
+
+#  Loading Image Values : WW-WL-SLICE
+    #valores_slice = apc.parent.img_stress.get_array_slice()
+    #self.valor_slice['values'] = valores_slice
+    #self.valor_slice.bind("<<ComboboxSelected>>", self.sle_cbox)
+    #self.valor_slice.current(0)
+    #self.valor_wl.insert(0, str(self.parent.img_stress.contenido[self.slice_select_stress].wl))
+    #self.valor_ww.insert(0, str(self.parent.img_stress.contenido[self.slice_select_stress].ww))
+
+    #  Loading Display Images
+    #self.imprimir_imagenes(tipo=0)
+    #self.print_img_prediccion(tipo=0)
+
+   # predict_img()
+
+    return render(request, "mf_webApp/result.html",data_patient)
 
 def lista(request):
 

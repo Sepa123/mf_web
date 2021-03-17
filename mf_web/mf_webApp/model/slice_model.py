@@ -1,6 +1,6 @@
 import skimage
 
-from utils.dicom_utils import refactor_dicom_file
+from mf_webApp.utils.dicom_utils import refactor_dicom_file
 
 import PIL.Image
 import PIL.ImageTk

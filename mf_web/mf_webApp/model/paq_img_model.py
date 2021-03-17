@@ -1,4 +1,4 @@
-from model.slice_model import SliceModel
+from mf_webApp.model.slice_model import SliceModel
 
 
 class PaqImgModel:
@@ -52,7 +52,9 @@ class PaqImgModel:
         #  ADD PREDICT TO YOUR IMAGES, SLICE AND TIME ARE ASSUMED TO BE IN ORDER
         #  detect first slice, so you can enter images from there
         pos = self.get_primer_slice_time()
+        print("pos = ",pos)
         cant = self.get_cantidad_slice()
+        print("cant = ",cant)
         for i in range(len(predict)):
             self.contenido[(pos+i) % cant].agregar_predict_img(predict[i])
 
@@ -67,6 +69,7 @@ class PaqImgModel:
                 if self.contenido[i].imgs[0].image_acq_time < save_first:
                     save_first = self.contenido[i].imgs[0].image_acq_time
                     slice_pos = i
+        print(slice_pos)
         return slice_pos
 
     def borrar_frames(self):
