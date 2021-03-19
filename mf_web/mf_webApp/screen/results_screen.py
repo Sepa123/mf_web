@@ -23,6 +23,23 @@ from mf_webApp.utils.tkinter_img import img2rgba
 from mf_webApp.utils.tooltip_utils import CreateToolTip
 from mf_webApp.utils.valores_curvas import *
 
+def rellenar_tabla(time_rest, data_rest, time_stress, data_stress):
+        area_rest = calculo_area_curva(data_rest,time_rest)
+        area_stress = calculo_area_curva(data_stress,time_stress)
+        res_peak_rest = calculo_maximo(data_rest,time_rest)[0]
+        res_peak_stress = calculo_maximo(data_stress, time_stress)[0]
+        res_pend_rest = calculo_pendiente(data_rest, time_rest)[0]
+        res_pend_stress = calculo_pendiente(data_stress, time_stress)[0]
+        res_ratio_value = np.round(calculo_pendiente(data_stress, time_stress)[0]
+                                      / calculo_pendiente(data_rest, time_rest)[0], 2)
+        print("area rest :", area_rest)
+        print("area stress :", area_stress)
+        print("peak rest :", res_peak_rest)
+        print("peak stress :", res_peak_stress)
+        print("pediente rest :", res_pend_rest)
+        print("pendiente stress :", res_pend_stress)
+        print("coefficiente :", res_ratio_value)
+
 class ResultScreen:
 
     def plot(request):
@@ -88,7 +105,9 @@ class ResultScreen:
         buf = io.BytesIO()
         canvas = FigureCanvasAgg(f)
         canvas.print_png(buf)
-        
+
+        rellenar_tabla(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest],
+                       time_stress[init_stress:fin_stress], data_stress[init_stress:fin_stress])
 
         # Creamos la respuesta enviando los bytes en tipo imagen png
         response = HttpResponse(buf.getvalue(), content_type='image/png')
