@@ -27,6 +27,12 @@ $(document).ready( function() {
             document.querySelector('#img_upload').dispatchEvent(new CustomEvent('wheelzoom.destroy'));
         }});
 
+    $('input[type=file]').change(function () {
+        console.log(this.files[0].mozFullPath);
+        });
+
+   
+
     function cleantables()
     {
         $('#file_data').children('tr').remove();

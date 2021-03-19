@@ -22,7 +22,8 @@ class UploadImage:
     def subir_img_rest(self):
         print("START UPLOAD IMG REST")
         #path_imgs = filedialog.askdirectory(initialdir="/", title=string.FileDialog_Rest)
-        path_imgs = 'C:/Users/Seba/Desktop/Test Images/5342 Rest/series'
+        ruta_img_rest= 'C:/Users/Seba/Desktop/Test Images/5342 Rest/series'
+        path_imgs = ruta_img_rest
         self.parent.dir_img_rest = path_imgs
         print("", self.parent.dir_img_rest )
         self.parent.img_rest.reiniciar_paq()
@@ -34,7 +35,8 @@ class UploadImage:
     def subir_img_stress(self):
         print("START UPLOAD IMG STRESS")
         #path_imgs = filedialog.askdirectory(initialdir="/", title=string.FileDialog_Stress)
-        path_imgs = 'C:/Users/Seba/Desktop/Test Images/5342 Rest/series'
+        ruta_img_stress = 'C:/Users/Seba/Desktop/Test Images/5342 Stress/series'
+        path_imgs = ruta_img_stress
         self.parent.dir_img_stress = path_imgs
         print(self.parent.dir_img_stress)
         self.parent.img_stress.reiniciar_paq()

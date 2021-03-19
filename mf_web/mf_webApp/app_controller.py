@@ -122,7 +122,9 @@ class AppController:
         else:
             print("SI EXISTEN frame drops EN Rest..................................")
             delete = True
+        print("AGREGANDO PREDICT DE REST..................................") 
         self.img_rest.agregar_predict(pred_rest, delete)
+        print("AGREGADO CORRECTAMENTE PREDICT DE REST..................................")
 
 
     def process_img(self):

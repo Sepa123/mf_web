@@ -24,10 +24,13 @@ from .app_controller import *
 
 import pickle
 
-
 from mf_webApp.screen.upload_image import UploadImage
-from .segmentation.model.model.models.u_net_fine_tuning import U_net_fine_tune as U_net
-from .segmentation.model.input_data.input_app import InputDataApp
+from mf_webApp.screen.results_screen import ResultScreen
+
+from mf_webApp.utils.dicom_utils import refactor_dicom_file
+from mf_webApp.utils.tkinter_img import img2rgba
+from mf_webApp.utils.tooltip_utils import CreateToolTip
+from mf_webApp.utils.valores_curvas import *
 
 from mf_web import settings
 
@@ -51,8 +54,13 @@ def ajax_server(request):
         if request.method == 'POST' and ('imgInpStress' in request.FILES) and request.FILES['imgInpStress'] and  str(request.FILES['imgInpStress'])[-3:].upper() =='DCM':
             print("Soy ajax server")            
             file = request.FILES['imgInpStress']
+            content = file.read()
+            print('###################################')
+            print(content)
+
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
+            print()
             full_path_file = os.path.join(settings.MEDIA_ROOT, filename)
             #print(colored('path->', 'red'), full_path_file)
 
@@ -96,6 +104,12 @@ def ajax_server(request):
     d['med'] = medinfo
 
     #print(colored(d, 'red'))
+    #apc = AppController()
+
+    #upl = UploadImage(apc)
+
+    #upl.subir_img_stress(full_path_file)
+
     return JsonResponse(d)
 
 def ajax_server2(request):
@@ -114,7 +128,7 @@ def ajax_server2(request):
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
             full_path_file = os.path.join(settings.MEDIA_ROOT, filename)
-            #print(colored('path->', 'red'), full_path_file)
+            
 
             generic['name'] = filename
             generic['size'] = os.path.getsize(full_path_file)
@@ -156,6 +170,12 @@ def ajax_server2(request):
     d['med'] = medinfo
 
     #print(colored(d, 'red'))
+    #apc = AppController()
+
+    #upl = UploadImage(apc)
+
+    #upl.subir_img_rest(full_path_file)
+
     return JsonResponse(d)
 
 def app_render(request):
@@ -177,87 +197,30 @@ def upload_image(request):
     
     return render(request, "mf_webApp/upload.html")
 
-
-#def predict_ztxy(model, img_array):
-   #n_timesteps = img_array.shape[1]
-    #img_length = img_array.shape[2]
-    #img_flatten = img_array.reshape(-1, img_length, img_length)
-    #img_flatten = img_flatten[..., np.newaxis]
-    #results_flatten = model.predict(img_flatten)
-    #results_array = results_flatten.reshape(
-     #   -1, n_timesteps, img_length, img_length)
-    #return results_array
-
-#def predict_img():
-        
-        #print(os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model')
-        #checkpoint_path = os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model'
-
-        #model = U_net()
-        #model.saver.restore(model.sess, checkpoint_path)
-
-        #dataset_stress = InputDataApp('C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress')
-        #data_extract_stress, frames_drop_stress = dataset_stress.get_data()
-        #pred_stress = predict_ztxy(model, data_extract_stress)
-        #if frames_drop_stress == 0:
-         #   delete = False
-        #else:
-         #   delete = True
-        #img_stress = PaqImgModel("Stress")
-        #img_stress.agregar_predict(pred_stress, delete)
-        #pass
-        #dataset_rest = InputDataApp('C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress')
-        #data_extract_rest, frames_drop_rest = dataset_rest.get_data()
-        #pred_rest = predict_ztxy(model, data_extract_rest)
-        #if frames_drop_rest == 0:
-         #   delete = False
-        #else:
-         #   delete = True
-        #self.img_rest.agregar_predict(pred_rest, delete)
-        #print("Esto segmentaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-
 def result(request):
 
     print("Pantalla Resultados de imagen")
     apc = AppController()
-
     upl = UploadImage(apc)
+    #resu = ResultScreen(apc)
 
+#Funciones para subir los datos de res y stress
     upl.subir_img_rest()
     upl.subir_img_stress()
 
-    #ruta = 'C:\\Users\\Seba\\Desktop\\Test Images\\5342 Rest\\series'
-    #ruta = 'C:\\Users\\Seba\\Desktop\\Test Images\\5342 Stress\\series'
-    # C:\\Users\\Seba\\Desktop\\Test Images\\imgTest1
-
-    #apc.process_rest_img(ruta)
-    #apc.process_stress_img(ruta)
-
     apc.process_img()
-
+# Carga de datos del paciente
     print("Tamos daos pal exito")
 
-    name_paciente = apc.patient.s_name
-    series_id_patient = apc.patient.s_series_id
-    series_des_patient = apc.patient.s_series_desc
-    study_patient = apc.patient.s_study_desc
+    #name_paciente = apc.patient.s_name
+    #series_id_patient = apc.patient.s_series_id
+    #series_des_patient = apc.patient.s_series_desc
+    #study_patient = apc.patient.s_study_desc
 
-    data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
-                    "study_pat":study_patient,}
-
-    print("Nombre paciente: ",name_paciente)
-    print("Series id paciente: ",series_id_patient)
-    print("series des paciente: ",series_des_patient)
-    print("estudio paciente: ",study_patient) 
-
+    #data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
+    #                "study_pat":study_patient,}
 
 #  Loading Image Values : WW-WL-SLICE
-    #valores_slice = apc.parent.img_stress.get_array_slice()
-    #self.valor_slice['values'] = valores_slice
-    #self.valor_slice.bind("<<ComboboxSelected>>", self.sle_cbox)
-    #self.valor_slice.current(0)
-    #self.valor_wl.insert(0, str(self.parent.img_stress.contenido[self.slice_select_stress].wl))
-    #self.valor_ww.insert(0, str(self.parent.img_stress.contenido[self.slice_select_stress].ww))
 
     #  Loading Display Images
     #self.imprimir_imagenes(tipo=0)
@@ -265,7 +228,7 @@ def result(request):
 
    # predict_img()
 
-    return render(request, "mf_webApp/result.html",data_patient)
+    return render(request, "mf_webApp/result.html")
 
 def lista(request):
 
