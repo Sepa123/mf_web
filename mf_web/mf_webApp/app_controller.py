@@ -79,8 +79,8 @@ class AppController:
         
         #C:\Users\Seba\Desktop\Myocardial Perfusion and segmentation\Interface\segmentation\checkpoint\model
 
-        checkpoint_path = 'C:\\Users\\Seba\\Desktop\\Myocardial Perfusion and segmentation\\Interface\\segmentation\\checkpoint\\model'
-        #checkpoint_path = os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model'
+        #checkpoint_path = 'C:\\Users\\Seba\\Desktop\\Myocardial Perfusion and segmentation\\Interface\\segmentation\\checkpoint\\model'
+        checkpoint_path = os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model'
 
         print("RUTA CARGADA CORRECTAMENTE....................................")
 
@@ -95,9 +95,6 @@ class AppController:
         pred_stress = predict_ztxy(model, data_extract_stress)
 
         print("PREDICT_ZTXY STRESS..................................")
-        print("length de data_extract_stress",data_extract_stress.shape)
-        print("length de pred_stress",pred_stress.shape)
-        print("length de pred_stress",frames_drop_stress)
 
         if frames_drop_stress == 0:
             print("NO EXISTEN frame drops EN STRESS..................................")

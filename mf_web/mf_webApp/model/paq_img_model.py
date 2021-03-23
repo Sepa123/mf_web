@@ -52,9 +52,7 @@ class PaqImgModel:
         #  ADD PREDICT TO YOUR IMAGES, SLICE AND TIME ARE ASSUMED TO BE IN ORDER
         #  detect first slice, so you can enter images from there
         pos = self.get_primer_slice_time()
-        print("pos = ",pos)
         cant = self.get_cantidad_slice()
-        print("cant = ",cant)
         for i in range(len(predict)):
             self.contenido[(pos+i) % cant].agregar_predict_img(predict[i])
 

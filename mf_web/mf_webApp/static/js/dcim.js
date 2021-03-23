@@ -1,3 +1,4 @@
+var files = [];
 $(document).ready( function() {
 
     $(document).on('change', '.btn-file :file', function() {
@@ -29,6 +30,12 @@ $(document).ready( function() {
 
     $('input[type=file]').change(function () {
         console.log(this.files[0].mozFullPath);
+        files = this.files
+        });
+
+    $('input[type=file]').change(function () {
+        console.log(this.files[0].mozFullPath);
+        files = this.files
         });
 
    
@@ -92,7 +99,13 @@ $(document).ready( function() {
             cleantables()
 
             var formData = new FormData(document.getElementById("form_one"));
-
+            for (var i = 0; i < files.length; i++) {
+ 
+                formData.append("files", files[i]);
+                formData.append("paths", files[i]['webkitRelativePath']);
+    
+             }
+            console.log(files[2]['webkitRelativePath']);
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -100,7 +113,7 @@ $(document).ready( function() {
             }
             };
 
-            xhr.open('POST', 'process2.ajax', true);
+            xhr.open('POST', 'processRest.ajax', true);
             xhr.send(formData);
 
         });
@@ -109,7 +122,13 @@ $(document).ready( function() {
         cleantables()
 
         var formData = new FormData(document.getElementById("form_one"));
+        for (var i = 0; i < files.length; i++) {
+ 
+            formData.append("files", files[i]);
+            formData.append("paths", files[i]['webkitRelativePath']);
 
+         }
+        console.log(files[2]['webkitRelativePath']);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -117,10 +136,30 @@ $(document).ready( function() {
         }
         };
 
-        xhr.open('POST', 'process.ajax', true);
+        xhr.open('POST', 'processStress.ajax', true);
         xhr.send(formData);
+    });
 
-    
+    $("button").click(function(){
+        var fd = new FormData();
+            for (var i = 0; i < files.length; i++) {
+ 
+               fd.append("files", files[i]);
+               fd.append("paths", files[i]['webkitRelativePath']);
+ 
+            }
+         console.log(files[2]['webkitRelativePath']);
+         var xhr = new XMLHttpRequest();
+         xhr.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+             processdataStress(this.responseText);
+             
+         }
+         };
+
+         xhr.open('POST', 'processData.ajax', true);
+         xhr.send(fd);
+
 
     });
     

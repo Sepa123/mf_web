@@ -8,7 +8,10 @@ urlpatterns = [
     path('result', views.result, name="result"),
     path('list', views.lista, name="list"),
     path('upl',views.lo, name="upload"),
-    path('process.ajax',views.ajax_server),
-    path('process2.ajax',views.ajax_server2),
-    path('plot/', ResultScreen.plot),
+    path('processing',views.processing, name="processing"),
+    path('processStress.ajax',views.upImgStress),
+    path('processRest.ajax',views.upImgRest),
+    #path('processData.ajax',views.send_data),
+    path('plot/', views.plot),
+
 ]

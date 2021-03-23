@@ -1,47 +1,45 @@
 from os import listdir, path as pt
-#from tkinter import *
-#from tkinter import filedialog
-#import tkinter.font as font
 import PIL.Image
 import PIL.ImageTk
 import pydicom
 
 from mf_webApp.model.imagen_model import Imagen
-#from mmodel.imagen_model import Imagen
-#from res import dim, string, colors
+
 from mf_webApp.utils.dicom_utils import refactor_dicom_file
-#from utils.dicom_utils import refactor_dicom_file
-#from utils.tooltip_utils import CreateToolTip
+
 
 
 class UploadImage:
 
     def __init__(self, parent):
         self.parent = parent
+        
 
-    def subir_img_rest(self):
+
+    def subir_img_rest(self, rutaRest):
         print("START UPLOAD IMG REST")
         #path_imgs = filedialog.askdirectory(initialdir="/", title=string.FileDialog_Rest)
-        ruta_img_rest= 'C:/Users/Seba/Desktop/Test Images/5342 Rest/series'
+        ruta_img_rest= rutaRest
         path_imgs = ruta_img_rest
         self.parent.dir_img_rest = path_imgs
-        print("", self.parent.dir_img_rest )
+        print("LA RUTA ES: ", self.parent.dir_img_rest )
         self.parent.img_rest.reiniciar_paq()
         self.process_path_img(path_imgs, self.parent.img_rest)
         cantidad_img = self.parent.img_rest.cantidad_imagenes()
         #self.titulo_rest.config(text="Images in rest: " + str(cantidad_img) + " total")
         #self.print_img(1)
 
-    def subir_img_stress(self):
+    def subir_img_stress(self, rutaStress):
         print("START UPLOAD IMG STRESS")
         #path_imgs = filedialog.askdirectory(initialdir="/", title=string.FileDialog_Stress)
-        ruta_img_stress = 'C:/Users/Seba/Desktop/Test Images/5342 Stress/series'
+        ruta_img_stress = rutaStress
         path_imgs = ruta_img_stress
         self.parent.dir_img_stress = path_imgs
-        print(self.parent.dir_img_stress)
+        print("LA RUTA ES: ",self.parent.dir_img_stress)
         self.parent.img_stress.reiniciar_paq()
         self.process_path_img(path_imgs, self.parent.img_stress)
         cantidad_img = self.parent.img_stress.cantidad_imagenes()
+        
         #self.titulo_stress.config(text="Images in stress: " + str(cantidad_img) + " total")
         #self.print_img(2)
 

@@ -12,7 +12,7 @@ matplotlib.use('Agg')
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 
 #Segmentation
 
@@ -34,14 +34,17 @@ from mf_webApp.utils.valores_curvas import *
 
 from mf_web import settings
 
-#Codigo de segmentacion 
+#Iniciando UploadImage
+apc = AppController()
+upl = UploadImage(apc)
+resu = ResultScreen(apc)
 
 #codigo para subir las imagenes
 
 
 #django-dicom-viewer proyecto
    
-def ajax_server(request):
+def upImgStress(request):
     start = time.time()
     d = dict()
     generic = dict()
@@ -49,18 +52,14 @@ def ajax_server(request):
 
     try:
 
-        print('FILE--->',str(request.FILES['imgInpStress'])[-3:])
+        print('FILE--->',str(request.FILES['imgInpStress']))
 
         if request.method == 'POST' and ('imgInpStress' in request.FILES) and request.FILES['imgInpStress'] and  str(request.FILES['imgInpStress'])[-3:].upper() =='DCM':
-            print("Soy ajax server")            
+            print("Soy ajax server Stress")            
             file = request.FILES['imgInpStress']
-            content = file.read()
             print('###################################')
-            print(content)
-
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
-            print()
             full_path_file = os.path.join(settings.MEDIA_ROOT, filename)
             #print(colored('path->', 'red'), full_path_file)
 
@@ -103,16 +102,27 @@ def ajax_server(request):
 
     d['med'] = medinfo
 
-    #print(colored(d, 'red'))
-    #apc = AppController()
-
-    #upl = UploadImage(apc)
-
-    #upl.subir_img_stress(full_path_file)
-
+    if request.method == 'POST' :
+        dir=request.FILES
+        dirlist=dir.getlist('files')
+        pathlist=request.POST.getlist('paths')
+        print(dir)
+        if not dirlist:
+            return HttpResponse( 'files not found')
+        else:
+            for file in dirlist:
+                position = os.path.join(os.path.abspath(os.path.join(os.getcwd(),'Dataset')),'/'.join(pathlist[dirlist.index(file)].split('/')[:-1]))
+                if not os.path.exists(position):
+                    os.makedirs(position )
+                storage = open(position+'/'+file.name, 'wb+')   
+                for chunk in file.chunks():          
+                    storage.write(chunk)
+                storage.close() 
+            print(str (position))
+    upl.subir_img_stress(position)
     return JsonResponse(d)
 
-def ajax_server2(request):
+def upImgRest(request):
     start = time.time()
     d = dict()
     generic = dict()
@@ -169,18 +179,52 @@ def ajax_server2(request):
 
     d['med'] = medinfo
 
-    #print(colored(d, 'red'))
-    #apc = AppController()
-
-    #upl = UploadImage(apc)
-
-    #upl.subir_img_rest(full_path_file)
-
+    if request.method == 'POST' :
+        dir=request.FILES
+        dirlist=dir.getlist('files')
+        pathlist=request.POST.getlist('paths')
+        print(dir)
+        if not dirlist:
+            return HttpResponse( 'files not found')
+        else:
+            for file in dirlist:
+                position = os.path.join(os.path.abspath(os.path.join(os.getcwd(),'Dataset')),'/'.join(pathlist[dirlist.index(file)].split('/')[:-1]))
+                if not os.path.exists(position):
+                    os.makedirs(position )
+                storage = open(position+'/'+file.name, 'wb+')   
+                for chunk in file.chunks():          
+                    storage.write(chunk)
+                storage.close() 
+            print(str (position))
+    upl.subir_img_rest(position)
     return JsonResponse(d)
 
+def send_data(request):
+     if request.method == 'POST' :
+        dir=request.FILES
+        dirlist=dir.getlist('files')
+        pathlist=request.POST.getlist('paths')
+        print(dir)
+        if not dirlist:
+            return HttpResponse( 'files not found')
+        else:
+            for file in dirlist:
+                position = os.path.join(os.path.abspath(os.path.join(os.getcwd(),'Dataset')),'/'.join(pathlist[dirlist.index(file)].split('/')[:-1]))
+                if not os.path.exists(position):
+                    os.makedirs(position )
+                storage = open(position+'/'+file.name, 'wb+')   
+                for chunk in file.chunks():          
+                    storage.write(chunk)
+                storage.close() 
+            print(str (position))
+            return HttpResponse('1hsdasdlskdads')
+
+def plot(request):
+    # Llamamos a curve_print() que retorna un response
+    response = resu.curve_print(1)
+    # Devolvemos la response
+    return response
 def app_render(request):
-    #print(settings.BASE_DIR)
-    #d = {'title': 'DICOM viewer','info':'DICOM SERVER SIDE RENDER'}
     return render(request, "mf_webApp/upl.html")
 
 def lo(request):
@@ -197,38 +241,48 @@ def upload_image(request):
     
     return render(request, "mf_webApp/upload.html")
 
+def processing(request):
+
+    # Ejecuta la funcion para procesar los datos de las imagenes
+    apc.process_img()
+    # carga los resultados de las imagenes
+    resu.curve_print(1)
+
+    return redirect("result")
+
 def result(request):
 
     print("Pantalla Resultados de imagen")
-    apc = AppController()
-    upl = UploadImage(apc)
-    #resu = ResultScreen(apc)
 
-#Funciones para subir los datos de res y stress
-    upl.subir_img_rest()
-    upl.subir_img_stress()
+    #Funciones para subir los datos de res y stress
+    # Carga de datos del paciente
 
-    apc.process_img()
-# Carga de datos del paciente
     print("Tamos daos pal exito")
 
-    #name_paciente = apc.patient.s_name
-    #series_id_patient = apc.patient.s_series_id
-    #series_des_patient = apc.patient.s_series_desc
-    #study_patient = apc.patient.s_study_desc
 
-    #data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
-    #                "study_pat":study_patient,}
 
-#  Loading Image Values : WW-WL-SLICE
+    name_paciente = apc.patient.s_name
+    series_id_patient = apc.patient.s_series_id
+    series_des_patient = apc.patient.s_series_desc
+    study_patient = apc.patient.s_study_desc
+
+    areaR = resu.area_rest
+
+    print("nombre paciente: ",name_paciente)
+    print("El area rest del paciente es: ",areaR)
+
+    data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
+                    "study_pat":study_patient}
+
+    #  Loading Image Values : WW-WL-SLICE
 
     #  Loading Display Images
     #self.imprimir_imagenes(tipo=0)
     #self.print_img_prediccion(tipo=0)
 
-   # predict_img()
+    # predict_img()
 
-    return render(request, "mf_webApp/result.html")
+    return render(request, "mf_webApp/result.html",data_patient)
 
 def lista(request):
 
