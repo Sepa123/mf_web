@@ -1,0 +1,89 @@
+{% extends "mf_webApp/base.html" %}
+
+{% block title %} Results {% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <!-- Resultados procesamiento imagenes
+    div[class^='col-']{
+        border: 5px solid white;
+        background-color: #375a7f;
+      }
+    -->
+    <br>
+      <style>
+      .naranja{
+        
+
+      }
+      .azul{
+        
+
+      }
+      .celeste{
+        
+
+      }
+
+    </style>
+
+    <!-- Container-->
+    <div class="row">
+          <!-- Resultados datos del grafico -->
+        <div class="col-8 celeste">
+
+            <br>
+           <center><img id="imgGraphic" src="plot.png" width="500px" />  </center>
+        </div>
+
+        <div class="col-4 celeste">
+            <br>
+            <br>
+            <table class="table table-hover" border="1" width="80%">
+              <tr class="table-primary"  align="center">
+                <td></td>
+                <td><font size="2">Rest Curve </font></td>
+                <td><font size="2">Stress Curve</font></td>    
+              </tr align="center">       
+              <tr class="table-secondary" align="center">        
+                <td><font size="2">Area</font></td>        
+                <td><font id="area_rest" size="2">{{area_rest}}</font></td>      
+                <td><font id="area_stress" size="2">{{area_stress}}</font></td>       
+              </tr>
+              <tr class="table-secondary" align="center">
+                <td><font size="2">Peak</font></td>        
+                <td><font size="2" id="res_peak_rest">{{res_peak_rest}}</font></td>      
+                <td><font id="res_peak_stress" size="2">{{res_peak_stress}}</font></td>      
+              </tr>       
+              <tr class="table-secondary" align="center">        
+                <td><font size="2">Slope</font></td>        
+                <td><font id="res_pend_rest" size="2">{{res_pend_rest}}</font></td>      
+                <td><font id="res_pend_stress" size="2">{{res_pend_stress}}</font></td>        
+              </tr>
+              <tr class="table-secondary" align="center">        
+                <td><font size="2">Coefficient</font></td>        
+                <td colspan="2" align="center"><font id="res_ratio_value" size="2">{{res_ratio_value}}</font></td>        
+              </tr>       
+            </table>
+            <br>
+            <table border= width="100%" align="center">
+              <tr>
+                <td align="center">
+                 <!-- <button type="submit" id="btnBlood" onclick="zona1()" class="btn btn-primary btn-sm">Blood</button>&nbsp;
+                  <button type="button" id="btnEpi" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
+                  <button type="button" id="btnEndo" class="btn btn-primary btn-sm">Endocardium</button> -->
+
+                  <button type="button" id="btnBlood"  class="btn btn-primary btn-sm">Blood</button>&nbsp;
+                  <button type="button" id="btnEpi" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
+                  <button type="button" id="btnEndo" class="btn btn-primary btn-sm">Endocardium</button>
+
+                </td>
+              </tr>
+            </table>
+            <br><br>
+         </div>
+    </div>
+
+
+{% endblock %}

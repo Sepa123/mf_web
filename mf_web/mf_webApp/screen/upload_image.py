@@ -22,7 +22,7 @@ class UploadImage:
         ruta_img_rest= rutaRest
         path_imgs = ruta_img_rest
         self.parent.dir_img_rest = path_imgs
-        print("LA RUTA ES: ", self.parent.dir_img_rest )
+        #print("LA RUTA ES: ", self.parent.dir_img_rest )
         self.parent.img_rest.reiniciar_paq()
         self.process_path_img(path_imgs, self.parent.img_rest)
         cantidad_img = self.parent.img_rest.cantidad_imagenes()
@@ -35,7 +35,7 @@ class UploadImage:
         ruta_img_stress = rutaStress
         path_imgs = ruta_img_stress
         self.parent.dir_img_stress = path_imgs
-        print("LA RUTA ES: ",self.parent.dir_img_stress)
+        #print("LA RUTA ES: ",self.parent.dir_img_stress)
         self.parent.img_stress.reiniciar_paq()
         self.process_path_img(path_imgs, self.parent.img_stress)
         cantidad_img = self.parent.img_stress.cantidad_imagenes()

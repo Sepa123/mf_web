@@ -1,5 +1,10 @@
+import base64
 import io
+from io import BytesIO
+import imageio
+import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -15,8 +20,6 @@ from mf_webApp.screen.upload_image import UploadImage
 
 
 from PIL import Image, ImageTk
-
-import pickle
 
 from mf_webApp.utils.dicom_utils import refactor_dicom_file
 from mf_webApp.utils.tkinter_img import img2rgba
@@ -40,6 +43,11 @@ class ResultScreen:
         self.plot_rest_axis = None
 
         #  FRAME IMAGES
+
+        self.figRest = None
+        self.figStress = None
+        self.figGraf = None
+
 
 
         self.zona_select = 1
@@ -82,6 +90,181 @@ class ResultScreen:
         self.subdiv = 'total'
 
 
+    
+    
+    def recarga_img(self, ww_obt, wl_obt):
+        self.apc.img_stress.contenido[self.slice_select_stress].wl = int(wl_obt)
+        self.apc.img_rest.contenido[self.slice_select_rest].wl = int(wl_obt)
+        self.apc.img_stress.contenido[self.slice_select_stress].ww = int(ww_obt)
+        self.apc.img_rest.contenido[self.slice_select_rest].ww = int(ww_obt)
+        self.imprimir_imagenesRest(tipo=0)
+        self.imprimir_imagenesStress(tipo=0)
+
+
+    def mov_img(self, paquete, direccion):
+        """
+        Moves the display images. Method called by the move buttons
+        param packet: packet of images to move
+            1: rest
+            2: stress
+        param direction: direction of movement
+            1: Left
+            2: Right
+        return: call to print_image, as appropriate
+        """
+        if paquete == 1:
+            if direccion == 1:
+                self.apc.img_rest.contenido[int(self.slice_select_rest)].disminuir_pos()
+                self.figRest , posA = self.imprimir_imagenesRest(tipo=1)
+            elif direccion == 2:
+                self.apc.img_rest.contenido[int(self.slice_select_rest)].aumentar_pos()
+                self.figRest , posA = self.imprimir_imagenesRest(tipo=1)
+        elif paquete == 2:
+            if direccion == 1:
+                self.apc.img_stress.contenido[int(self.slice_select_stress)].disminuir_pos()
+                self.figStress, posA = self.imprimir_imagenesStress(tipo=2)
+            elif direccion == 2:
+                self.apc.img_stress.contenido[int(self.slice_select_stress)].aumentar_pos()
+                self.figStress, posA = self.imprimir_imagenesStress(tipo=2)
+
+        return self.figRest, self.figStress, posA
+
+
+
+    def imprimir_imagenesStress(self, tipo=0):
+
+        if tipo == 0 or tipo == 2:
+            #  Stress printed
+            x, y = self.apc.img_stress.contenido[self.slice_select_stress].imgs[0].pixel_array.shape
+            height = int(306)
+            width = int(height * y / x)
+            img, pos_actual, l_button, r_button = self.apc.img_stress.contenido[
+                int(self.slice_select_stress)].current_img(width, height)
+            cantidad_img = self.apc.img_stress.contenido[self.slice_select_rest].cantidad_imgs()
+
+            posStress = {"cantidad_imgStress": cantidad_img, "pos_actualStress": pos_actual+1}
+            self.figStress = plt.gcf()
+            plt.figure(facecolor="#7C7878")
+            plt.axis('off')
+            plt.imshow(img, cmap='gray')
+        
+        self.print_img_prediccionStress(tipo=tipo)
+
+        return self.figStress, posStress
+
+
+    def imprimir_imagenesRest(self, tipo=0):
+        
+        if tipo == 0 or tipo == 1:
+            #  Rest printed
+            d = dict()
+            x, y = self.apc.img_rest.contenido[self.slice_select_rest].imgs[0].pixel_array.shape
+            height = int(306)
+            width = int(height*y/x)
+            img, pos_actual, l_button, r_button = self.apc.img_rest.contenido[
+                int(self.slice_select_rest)].current_img(width, height)
+
+            cantidad_img = self.apc.img_rest.contenido[self.slice_select_rest].cantidad_imgs()
+
+            posRest = {"cantidad_imgRest": cantidad_img, "pos_actualRest": pos_actual+1}
+            self.figRest = plt.gcf()
+            plt.figure(facecolor="#7C7878")
+            plt.axis('off')
+            plt.imshow(img, cmap='gray')
+
+        self.print_img_prediccionRest(tipo=tipo)
+
+        return self.figRest, posRest
+
+    def print_img_prediccionStress(self, tipo):
+
+        zona = self.zona_select
+        if tipo == 0 or tipo == 2:
+            #  Print Stress
+            x, y = self.apc.img_stress.contenido[self.slice_select_stress].imgs[0].pixel_array.shape
+            height = int(306)
+            width = int(height * y / x)
+            img_rgba = self.get_predict(tipo, zona, width, height)
+            img_rgba = Image.frombytes('RGBA', (img_rgba.shape[1], img_rgba.shape[0]), img_rgba.astype('b').tostring())
+
+            self.predict_stress = img_rgba
+
+            self.figStress = plt.gcf()
+            plt.axis('off')
+            plt.imshow(self.predict_stress, cmap='gray')
+            plt.close()
+
+            pass
+
+
+    def print_img_prediccionRest(self, tipo):
+        """
+        Prints the preductions, according to the area of interest.
+        param type: What type of image to display
+            0: Both images
+            1: Show Rest image
+            2: Display image Stress
+        return: Image on canvas
+        """
+        zona = self.zona_select
+        if tipo == 0 or tipo == 1:
+            #  Print Rest
+            x, y = self.apc.img_rest.contenido[self.slice_select_rest].imgs[0].pixel_array.shape
+            height = int(306)
+            width = int(height * y / x)
+            img_rgba = self.get_predict(tipo, zona, width, height)
+            img_rgba = Image.frombytes('RGBA', (img_rgba.shape[1], img_rgba.shape[0]), img_rgba.astype('b').tostring())
+
+            self.predict_rest = img_rgba
+
+            self.figRest = plt.gcf()
+            plt.axis('off')
+            plt.imshow(self.predict_rest, cmap='gray')
+            plt.close()
+
+            pass
+        
+
+    def get_predict(self, tipo, zona, w, h):
+        """
+        Delivers the array of the RGBA image of the area to be displayed.
+        param type: What type of image to display
+            0: Both Images
+            1: Show Rest image
+            2: Show Stress image
+        param zone: Zone to be displayed
+            1: Blood
+            2: Epicardium
+            3: Endocardium
+        param w: Width that you want the image to show
+        :param h: Height you want the image to show
+        return: RGBA Array
+        """
+        img_rgba = None
+        if tipo == 0 or tipo == 1:
+            # Return image REST
+            if self.subdiv == 'total':
+                imgs_array = self.apc.img_rest.contenido[
+                    int(self.slice_select_rest)].current_predict(0)[zona - 1]
+            else:
+                parte = int(self.subdiv[len(self.subdiv)-1])
+                imgs_array = self.apc.img_rest.contenido[
+                    int(self.slice_select_rest)].current_predict(parte)[zona - 1]
+            img_rgba = img2rgba(imgs_array, zona, w, h)
+        if tipo == 0 or tipo == 2:
+            # Return image STRESS
+            if self.subdiv == 'total':
+                imgs_array = self.apc.img_stress.contenido[
+                    int(self.slice_select_stress)].current_predict(0)[zona - 1]
+            else:
+                parte = int(self.subdiv[len(self.subdiv) - 1])
+                imgs_array = self.apc.img_stress.contenido[
+                    int(self.slice_select_stress)].current_predict(parte)[zona - 1]
+            img_rgba = img2rgba(imgs_array, zona, w, h)
+        return img_rgba
+
+    
+
     def curve_print(self, zona):
 
         init_rest = self.apc.img_rest.contenido[self.slice_select_rest].inicio
@@ -109,17 +292,10 @@ class ResultScreen:
             data_stress = self.apc.img_stress.contenido[self.slice_select_stress].data_endocardio[self.subdiv]
         ##
 
-        # Creamos los datos para representar en el gráfico
-        restx = range(1,11)
-        resty = sample(range(20), len(restx))
-
-        stressx = range(1,11)
-        stressy = sample(range(20), len(stressx))
-
         # Creamos una figura y le dibujamos el gráfico
-        f = plt.figure()
+        self.figGraf = plt.figure()
         # Creamos los ejes
-        axes = f.add_axes([0.15, 0.15, 0.75, 0.75]) # [left, bottom, width, height]
+        axes = self.figGraf.add_axes([0.15, 0.15, 0.75, 0.75]) # [left, bottom, width, height]
         #axes.plot(stressx, stressx, label="Curva Rest")
         axes.plot(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest], label="Curva Rest")
         axes.plot(time_stress[init_stress:fin_stress], data_stress[init_stress:fin_stress], label="Curva stress")
@@ -131,26 +307,20 @@ class ResultScreen:
 
         print("wl", self.apc.img_stress.contenido[self.slice_select_stress].wl )
         print("ww", self.apc.img_stress.contenido[self.slice_select_stress].ww )
+        plt.close()
 
-        # Como enviaremos la imagen en bytes la guardaremos en un buffer
-        buf = io.BytesIO()
-        canvas = FigureCanvasAgg(f)
-        canvas.print_png(buf)
-
-        self.rellenar_tabla(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest],
+        tabla = self.rellenar_tabla(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest],
                        time_stress[init_stress:fin_stress], data_stress[init_stress:fin_stress])
 
-        # Creamos la respuesta enviando los bytes en tipo imagen png
-        response = HttpResponse(buf.getvalue(), content_type='image/png')
+        self.print_img_prediccionRest(tipo=0)
+        self.print_img_prediccionStress(tipo=0)
 
-        # Limpiamos la figura para liberar memoria
-        f.clear()
 
-        # Añadimos la cabecera de longitud de fichero para más estabilidad
-        response['Content-Length'] = str(len(response.content))
+
+        return self.figGraf, tabla
 
         # Devolvemos la response
-        return response
+       # return time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest], time_stress[init_stress:fin_stress], data_stress[init_stress:fin_stress]
 
     def rellenar_tabla(self, time_rest, data_rest, time_stress, data_stress):
         self.area_rest = calculo_area_curva(data_rest,time_rest)
@@ -161,15 +331,13 @@ class ResultScreen:
         self.res_pend_stress = calculo_pendiente(data_stress, time_stress)[0]
         self.res_ratio_value = np.round(calculo_pendiente(data_stress, time_stress)[0]
                                       / calculo_pendiente(data_rest, time_rest)[0], 2)
+
+        tabla = {'area_rest': self.area_rest,'area_stress': self.area_stress,'res_peak_rest': self.res_peak_rest,
+                 'res_peak_stress': self.res_peak_stress,'res_pend_rest': self.res_pend_rest,'res_pend_stress': self.res_pend_stress,
+                 'res_ratio_value': self.res_ratio_value}
+
         
-        print("area rest :", self.area_rest)
-        print("area stress :", self.area_stress)
-        print("peak rest :", self.res_peak_rest)
-        print("peak stress :", self.res_peak_stress)
-        print("pediente rest :", self.res_pend_rest)
-        print("pendiente stress :", self.res_pend_stress)
-        print("coefficiente :", self.res_ratio_value)
-        
+        return tabla
 
     
 

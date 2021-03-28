@@ -30,40 +30,8 @@
 
     <!-- Container-->
     <div class="row">
-      <!-- Datos Paciente y grafico -->
-       <!-- <div class="col-3 rojo ">
-          <h5>Informacion</h5> </br>
-          <table border=1 width=100%>
-            <tr>
-              <td>
-                Patient: <label for="">nombre</label>
-                <br>
-                Study Desc: <label for="">study_desc</label>
-                <br>
-                Series Desc: <label for="">serie_desc</label>
-                <br>
-                Series ID: <label for="">id_patient</label>
-                <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button type="button" class="btn btn-primary btn-sm">Blood</button>&nbsp;
-                <button type="button" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
-                <button type="button" class="btn btn-primary btn-sm">Endocardium</button>
-              </td>
-            </tr>
-            <tr>
-              <td >Rest Curve</td>
-            </tr>
-            <tr>
-              <td>Stress Curve</td>
-            </tr>
-          </table>
-        </div> -->
-        <!-- Imagenes subidas -->
-        <div class="col-9 naranja">
-           <table border=1 width=100% align="center">
+        <div class="col-10 naranja">
+           <table border=0 width=100% align="center">
               <tr>
                 <td align="center">
                   Rest image
@@ -72,18 +40,32 @@
                    Stress image
                 </td>
               </tr>
+              <tr>
+                <td align="center">
+                  <button type="button" id="btnAtrasRest" class="btn btn-primary btn-sm"> << </button>&nbsp;&nbsp;
+                  image <font id="pos_rest" size="2">{{pos_rest}}</font> of <font id="cant_rest" size="2">{{cant_rest}}</font>&nbsp;
+                  <button type="button" id="btnSigRest" class="btn btn-primary btn-sm"> >> </button>
+                </td>
+                <td align="center" >
+                  <button type="button" id="btnAtrasStress" class="btn btn-primary btn-sm"> << </button>&nbsp;&nbsp;
+                  image <font id="pos_stress" size="2">{{pos_stress}}</font> of <font id="cant_stress" size="2">{{cant_stress}}</font>&nbsp;&nbsp;
+                  <button type="button" id="btnSigStress" class="btn btn-primary btn-sm"> >> </button>
+                </td>
+              </tr>
               <tr height="510">
                 <td align="center" >
-                  <img id='img_rest' style="text-align:center;" width="200" height="200" />
+                  <!-- {% include "mf_webApp/imageRest.html" %} -->
+                <img id='img_rest' src="img_rest.jpg"  width="460" height="460"/> 
                 </td>
                 <td align="center">
-                  <img id='img_stress' style="text-align:center;" width="200" height="200" />
+                  <!-- {% include "mf_webApp/imageStress.html" %} -->
+                  <img  id='img_stress' src="img_stress.png"  width="460" height="460"/> 
                 </td>
               </tr>
             </table>
           </div>
           <!-- Resultados datos del grafico -->
-        <div class="col-3 celeste">
+        <div class="col-2 celeste">
           <br>
            <table border=0 width=100%  >
             <tr>
@@ -99,55 +81,43 @@
               </td>
             </tr>
               <tr>
+
                <td>Slice:</td>
               </tr>
               <tr>
                 <td>WW:</td>
-                <td><input type="text"></input></td>
+                <td><input id="ww_obt" name="ww_obt" type="text" value={{ww}} style="width : 100px; heigth : 10px"></input></td>
               </tr>
               <tr>
                 <td>WL:</td>
-                <td><input type="text"></input></td>
+                <td><input id="wl_obt" name="wl_obt" type="text" value="{{wl}}" style="width : 100px; heigth : 10px"></input></td>
               </tr>
               <tr>
-                <td colspan="2" align="center"><button type="button" class="btn btn-primary btn-sm">Reload</button></td>
-              </tr>
-            </table>
-            <br><br>
-            <img src="/plot/" width="200px" />
-            <table border="1" width="80%">
-              <tr  align="center">
                 <td></td>
-                <td><font size="2">Rest Curve </font></td>
-                <td><font size="2">Stress Curve</font></td>    
-              </tr align="center">       
-              <tr align="center">        
-                <td><font size="2">Area</font></td>        
-                <td><font size="2">1.234</font></td>      
-                <td><font size="2">1.234</font></td>       
               </tr>
-              <tr  align="center">
-                <td><font size="2">Peak</font></td>        
-                <td><font size="2">1.234</font></td>      
-                <td><font size="2">1.234</font></td>      
-              </tr>       
-              <tr  align="center">        
-                <td><font size="2">Slope</font></td>        
-                <td><font size="2">1.234</font></td>      
-                <td><font size="2">1.234</font></td>        
+              <tr>
+                <td colspan="2" align="center"><button type="button" value="Reload" id="btnRecargaIma" class="btn btn-primary btn-sm">Reload</button></td>
               </tr>
-              <tr  align="center">        
-                <td><font size="2">Coefficient</font></td>        
-                <td colspan="2" align="center"><font size="2">1.234</font></td>        
-              </tr>       
+              </form>
             </table>
             <br>
-            <table border= width="100%" align="center">
+            <br>
+            <table width="100%" align="center">
               <tr>
                 <td align="center">
-                  <button type="button" class="btn btn-primary btn-sm">Blood</button>&nbsp;
-                  <button type="button" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
-                  <button type="button" class="btn btn-primary btn-sm">Endocardium</button>
+                  <button type="button" id="btnBloodIma" class="btn btn-primary btn-sm">Blood</button>&nbsp;
+                  <button type="button" id="btnEpiIma" class="btn btn-primary btn-sm">Epicardium</button>&nbsp;
+                </td>
+                <tr>
+                  <td align="center"><button type="button" id="btnEndoIma" class="btn btn-primary btn-sm">Endocardium</button></td>
+                </tr>
+              </tr>
+            </table>
+            <br>
+            <table  width="100%" align="center">
+              <tr>
+                <td align="center">
+                  <a class="btn btn-secondary" target="_blank" href="{% url 'table' %}">Graphics</a> 
                 </td>
               </tr>
             </table>
@@ -164,6 +134,8 @@
 
          </div>
     </div>
+
+   
 
 
 {% endblock %}
