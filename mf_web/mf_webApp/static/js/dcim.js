@@ -140,6 +140,7 @@ $(document).ready( function() {
 
 
     // Botones dE Zonas de interes para los graficos
+    var zona;
 
     function graphicsdata(tabla){
         var json = JSON.parse(tabla)
@@ -174,8 +175,7 @@ $(document).ready( function() {
     $("#btnBlood").click(function(){
 
         var fd = new FormData();
-
-        var zona = "1"
+        zona = "1";
 
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
@@ -191,7 +191,7 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        var zona = "2"
+        zona = "2"
 
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
@@ -207,7 +207,7 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        var zona = "3"
+        zona = "3"
 
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
@@ -229,13 +229,10 @@ $(document).ready( function() {
         $('#img_stress').html("")
         $('#pos_rest').html("")
         $('#pos_stress').html("")
-
-
-
         $('#pos_rest').append(json.pos_actualRest)
-        $('#pos_rest').append(json.pos_actualStress)
+        $('#pos_stress').append(json.pos_actualStress)
 
-        if (json.urlRest!=null || json.urlRest!=null){
+        if (json.urlRest!=null || json.urlStress!=null){
     
             $('#img_rest').attr('src', json.urlRest['base64']);
             $('#img_stress').attr('src', json.urlStress['base64']);
@@ -251,7 +248,7 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        var zona = "1"
+        zona = "1"
 
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
@@ -267,7 +264,7 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        var zona = "2"
+        zona = "2"
 
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
@@ -282,9 +279,7 @@ $(document).ready( function() {
     $("#btnEndoIma").click(function(){
 
         var fd = new FormData();
-
-        var zona = "3"
-
+        zona = "3"
         fd.append("zona", zona)
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
@@ -422,5 +417,282 @@ function imagesmovedataStress(posStress){
          xhr.open('POST', 'recargar.ajax', true);
          xhr.send(fd); 
     });
+
+    // dividiri miocardio
+
+    var restClick = false;
+    var pxRest = 0;
+    var pyRest = 0;
+    var stressClick = false;
+    var pxStress = 0;
+    var pyStress = 0;
+
+    var imgR = document.getElementById("img_rest");
+    var ctxR = document.getElementById("canvasR").getContext("2d");
+
+    var imgS = document.getElementById("img_stress");
+    var ctxS = document.getElementById("canvasS").getContext("2d");
     
+    // Canvas Rest
+    $("#canvasR").click(function(e){
+        getPosition(e); 
+        restClick = true;
+
+   });
+   
+   var pointSize = 3;
+   
+   function getPosition(event){
+        var rect = canvasR.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        
+        //alert("eje x:"+x+"eje y:"+y)
+
+        pxRest = x;
+        pyRest = y;
+
+        //alert("eje x: "+pxRest+" eje y: "+pyRest)
+
+        drawCoordinates(x,y);
+   }
+   
+   function drawCoordinates(x,y){	
+       ctxR.clearRect(0, 0, canvasR.width, canvasR.height);
+       ctxR.fillStyle = "#FEFAF9"; // white color
+       ctxR.beginPath();
+       ctxR.arc(x, y, pointSize, 0, Math.PI * 2, true);
+       //ctx.drawImage(img,187,56,278,369,-3,-2,222,295)
+       ctxR.drawImage(imgR,187,56,280,372,-2,-2,224,297);
+       ctxR.fill();
+       
+   }
+
+   //Canvas Stress
+
+   $("#canvasS").click(function(e){
+    getPositionS(e); 
+    stressClick = true;
+
+});
+
+function getPositionS(event){
+    var rect = canvasS.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    
+    //alert("eje x:"+x+"eje y:"+y)
+
+    pxStress = x;
+    pyStress = y;
+
+    //alert("eje x: "+pxRest+" eje y: "+pyRest)
+
+    drawCoordinatesS(x,y);
+}
+
+function drawCoordinatesS(x,y){	
+   ctxS.clearRect(0, 0, canvasS.width, canvasS.height);
+   ctxS.fillStyle = "#FEFAF9"; // white color
+   ctxS.beginPath();
+   ctxS.arc(x, y, pointSize, 0, Math.PI * 2, true);
+   //ctx.drawImage(img,187,56,278,369,-3,-2,222,295)
+   ctxS.drawImage(imgS,187,56,280,372,-2,-2,224,297)
+   ctxS.fill();
+   
+}
+
+//Botones para la division
+
+
+
+
+   $("#btnDivMi").click(function(){
+    //ctx.drawImage(img,190,58,277,368,220,160,221,294)
+    ctxR.drawImage(imgR,187,56,280,372,-2,-2,224,297);
+    //ctx.drawImage(img,187,56,278,369,-3,-2,222,295)
+    // drawImage(imagen, imgX, imgY, imgAncho, imgAlto, lienzoX, lienzoY, LienzoAncho, LienzoAlto)
+
+    //ctx.drawImage(img,190,58,277,368,220,160,221,294)
+    ctxS.drawImage(imgS,187,56,280,372,-2,-2,224,297);
+
+    var x = document.getElementById("myDiv");
+    var btnDivMi = document.getElementById("btnDivMi");
+
+    var img_rest =document.getElementById("img_rest");
+    var img_stress=  document.getElementById("img_stress");
+
+    var pointRest=  document.getElementById("pointRest");
+    var pointStress=  document.getElementById("pointStress");
+    
+
+if (x.style.display === "none") {
+    //alert("Aparesco div") Aparece el div
+    btnDivMi.style.display = "none";
+    img_rest.style.display = "none";
+    img_stress.style.display = "none";
+    //img_stress.style.display = "none";
+
+    pointRest.style.display = "block";
+    pointStress.style.display = "block";
+    x.style.display = "block";
+} else {
+    // alert("Desaparesco")
+    btnDivMi.style.display = "none";
+    x.style.display = "none";
+}
+});
+
+$("#btnCancel").click(function(){
+    var x = document.getElementById("myDiv");
+    var btnDivMi = document.getElementById("btnDivMi");
+    var img_rest =document.getElementById("img_rest");
+    var img_stress=  document.getElementById("img_stress");
+
+    var pointRest=  document.getElementById("pointRest");
+    var pointStress=  document.getElementById("pointStress");
+    
+if (x.style.display === "none") {
+    // alert("Aparesco")
+    btnDivMi.style.display = "none";
+    x.style.display = "block";
+} else {
+    // alert("Desaparesco")
+    btnDivMi.style.display = "block";
+    img_rest.style.display = "block";
+    img_stress.style.display = "block";
+    
+    pointRest.style.display = "none";
+    pointStress.style.display = "none"
+    x.style.display = "none";
+}
+});
+
+
+function imagepartition(partImage){
+    var json = JSON.parse(partImage)
+    $('#img_rest').html("")
+    $('#img_stress').html("")
+    $('#pos_rest').html("")
+    $('#pos_stress').html("")
+    $('#pos_rest').append(json.pos_actualRest)
+    $('#pos_stress').append(json.pos_actualStress)
+
+    if (json.urlRest!=null || json.urlStress!=null){
+
+        $('#img_rest').attr('src', json.urlRest['base64']);
+        $('#img_stress').attr('src', json.urlStress['base64']);
+    }else
+    {
+        $('#img_rest').attr('src', '/static/img/dot.gif');   
+        $('#img_stress').attr('src', '/static/img/dot.gif');  
+    }
+}
+
+$("#btnConf").click(function(){
+
+    var xRest, yStress;
+    var xStress, yStress;
+
+
+    if(restClick == true && stressClick == true ){
+
+        restClick = false;
+        stressClick = false;
+        var fd = new FormData();
+
+        xRest = parseInt(pxRest)
+        yRest = parseInt(pyRest)
+
+        xStress = parseInt(pxStress)
+        yStress = parseInt(pyStress)
+
+        fd.append("xRest", xRest)
+        fd.append("yRest", yRest)
+        fd.append("xStress", xStress)
+        fd.append("yStress", yStress)
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            imagepartition(this.responseText);
+        }
+        };
+        xhr.open('POST', 'partition.ajax', true);
+        xhr.send(fd); 
+
+        var x = document.getElementById("myDiv");
+        var cbo = document.getElementById("cboxPartition");
+        var btnDivMi = document.getElementById("btnDivMi");
+
+        var img_rest =document.getElementById("img_rest");
+        var img_stress=  document.getElementById("img_stress");
+
+        var pointRest=  document.getElementById("pointRest");
+        var pointStress=  document.getElementById("pointStress");
+        
+
+        if (x.style.display === "none") {
+            // alert("Aparesco")
+            btnDivMi.style.display = "none";
+            x.style.display = "block";
+        } else {
+            // alert("Desaparesco")
+            btnDivMi.style.display = "block";
+            img_rest.style.display = "block";
+            img_stress.style.display = "block";
+            cbo.style.display = "block";
+            
+            pointRest.style.display = "none";
+            pointStress.style.display = "none"
+            x.style.display = "none";
+        }
+    }else{
+        alert("No se puede realizar la division, falta seleccionar un punto ")
+    }
+     
+});
+
+
+
+function subdivimage(partImage){
+    var json = JSON.parse(partImage)
+    $('#img_rest').html("")
+    $('#img_stress').html("")
+    $('#pos_rest').html("")
+    $('#pos_stress').html("")
+    $('#pos_rest').append(json.pos_actualRest)
+    $('#pos_stress').append(json.pos_actualStress)
+
+    if (json.urlRest!=null || json.urlStress!=null){
+
+        $('#img_rest').attr('src', json.urlRest['base64']);
+        $('#img_stress').attr('src', json.urlStress['base64']);
+    }else
+    {
+        $('#img_rest').attr('src', '/static/img/dot.gif');   
+        $('#img_stress').attr('src', '/static/img/dot.gif');  
+    }
+}
+
+$('#cboPart').on('change', function()
+{
+        var fd = new FormData();
+        if (zona  == null){
+            zona = "1";
+        }
+        fd.append("zona", zona)
+        fd.append("particion", this.value)
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            subdivimage(this.responseText);
+        }
+        };
+        xhr.open('POST', 'subdiv.ajax', true);
+        xhr.send(fd);
+});
+
+
 });

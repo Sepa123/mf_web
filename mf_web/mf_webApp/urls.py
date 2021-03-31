@@ -22,10 +22,12 @@ urlpatterns = [
     path('movDRest.ajax',views.mov_imgDelanteRest, name="mov_imgDelanteRest"),
     path('movAStress.ajax',views.mov_imgAtrasStress, name="mov_imgAtrasStress"),
     path('movDStress.ajax',views.mov_imgDelanteStress, name="mov_imgDelanteStress"),
+    path('partition.ajax',views.particion, name="partition"),
+    path('subdiv.ajax',views.cambiar_particion, name="subdiv"),
     path('img_rest.jpg', views.img_rest),
     path('img_stress.png', views.img_stress),
     path('table', views.curve_table, name="table"),
-    path('imagerest', views.restlist),
+    #path('imagerest', views.restlist),
     path('plot.png', views.plot),
 
 ]

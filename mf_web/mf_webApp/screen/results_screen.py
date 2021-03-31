@@ -89,9 +89,28 @@ class ResultScreen:
         self.punto_rest = None
         self.subdiv = 'total'
 
+    def pressed_rest(self, x, y):
+        
+        self.punto_rest = None
+        self.punto_rest = [int(x/2), int(y/2)]
 
+    def pressed_stress(self, x, y):
+        self.punto_stress = None
+        self.punto_stress = [int(x/2), int(y/2)]
     
-    
+    def punto_tocado(self):
+        #self.punto_rest = punto_rest
+        #self,punto_stress = punto_stress
+        self.apc.img_rest.calculo_division(self.punto_rest)
+        self.apc.img_stress.calculo_division(self.punto_stress)
+        self.cambio_particion(1,1)
+        pass
+
+    def cambio_particion(self, particion, zona):
+       # particion = self.valor_div.get()
+        self.subdiv = 'sub' + str(particion)
+        self.curve_print(zona)
+
     def recarga_img(self, ww_obt, wl_obt):
         self.apc.img_stress.contenido[self.slice_select_stress].wl = int(wl_obt)
         self.apc.img_rest.contenido[self.slice_select_rest].wl = int(wl_obt)
@@ -144,7 +163,7 @@ class ResultScreen:
 
             posStress = {"cantidad_imgStress": cantidad_img, "pos_actualStress": pos_actual+1}
             self.figStress = plt.gcf()
-            plt.figure(facecolor="#7C7878")
+            plt.figure(facecolor="#222")
             plt.axis('off')
             plt.imshow(img, cmap='gray')
         
@@ -168,7 +187,7 @@ class ResultScreen:
 
             posRest = {"cantidad_imgRest": cantidad_img, "pos_actualRest": pos_actual+1}
             self.figRest = plt.gcf()
-            plt.figure(facecolor="#7C7878")
+            plt.figure(facecolor="#222")
             plt.axis('off')
             plt.imshow(img, cmap='gray')
 
@@ -300,13 +319,13 @@ class ResultScreen:
         axes.plot(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest], label="Curva Rest")
         axes.plot(time_stress[init_stress:fin_stress], data_stress[init_stress:fin_stress], label="Curva stress")
         #axes.plot(restx,resty, label="Curva Stress")
-        axes.set_xlabel("Eje X")
-        axes.set_ylabel("Eje Y")
+        axes.set_xlabel("Time")
+        axes.set_ylabel("Signal")
         axes.set_title("Graphics")
         plt.legend(('Curva Rest', 'Curva Stress'), loc = 'upper right')
 
-        print("wl", self.apc.img_stress.contenido[self.slice_select_stress].wl )
-        print("ww", self.apc.img_stress.contenido[self.slice_select_stress].ww )
+        #print("wl", self.apc.img_stress.contenido[self.slice_select_stress].wl )
+        #print("ww", self.apc.img_stress.contenido[self.slice_select_stress].ww )
         plt.close()
 
         tabla = self.rellenar_tabla(time_rest[init_rest:fin_rest], data_rest[init_rest:fin_rest],

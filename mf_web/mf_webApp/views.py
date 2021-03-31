@@ -5,6 +5,7 @@ import traceback
 from io import BytesIO
 import pydicom
 from datetime import datetime
+import shutil
 
 import imageio
 import matplotlib
@@ -56,12 +57,12 @@ def upImgStress(request):
 
     try:
 
-        print('FILE--->',str(request.FILES['imgInpStress']))
+        #print('FILE--->',str(request.FILES['imgInpStress']))
 
         if request.method == 'POST' and ('imgInpStress' in request.FILES) and request.FILES['imgInpStress'] and  str(request.FILES['imgInpStress'])[-3:].upper() =='DCM':
-            print("Soy ajax server Stress")            
+            #print("Soy ajax server Stress")            
             file = request.FILES['imgInpStress']
-            print('###################################')
+            #print('###################################')
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
             full_path_file = os.path.join(settings.MEDIA_ROOT, filename)
@@ -82,14 +83,14 @@ def upImgStress(request):
                         dcpimg = dcpimg[0]
 
                     fig = plt.gcf()
+                    plt.figure(figsize=(1,1))
                     plt.axis('off')
-                    
-
-                    print("Imagen leida Stress: ",dcpimg)
+                
+                   # print("Imagen leida Stress: ",dcpimg)
                     plt.imshow(dcpimg, cmap='gray')
                     #plt.colorbar()
                     figure = BytesIO()
-                    plt.savefig(figure, format='jpg', dpi=300, facecolor="#7C7878")
+                    plt.savefig(figure, format='jpg', dpi=300, facecolor="#222")
 
                     plt.close()
                     d['url'] = {'base64': 'data:image/png;base64,' + base64.b64encode(figure.getvalue()).decode()}
@@ -127,6 +128,7 @@ def upImgStress(request):
                 storage.close() 
            # print(str (position))
     upl.subir_img_stress(position)
+    # shutil.rmtree(position, ignore_errors=True) # Si funciona para borrar la carpeta
     return JsonResponse(d)
 
 def upImgRest(request):
@@ -137,10 +139,10 @@ def upImgRest(request):
 
     try:
 
-        print('FILE--->',str(request.FILES['imgInp'])[-3:])
+       # print('FILE--->',str(request.FILES['imgInp'])[-3:])
 
         if request.method == 'POST' and ('imgInp' in request.FILES) and request.FILES['imgInp'] and  str(request.FILES['imgInp'])[-3:].upper() =='DCM':
-            print("Soy Ajax server 2 ")            
+            #print("Soy Ajax server 2 ")            
             file = request.FILES['imgInp']
             fs = FileSystemStorage()
             filename = fs.save(file.name, file)
@@ -151,7 +153,7 @@ def upImgRest(request):
             generic['size'] = os.path.getsize(full_path_file)
             try:
                 if full_path_file[-3:].upper() == 'DCM':
-                    print("Full RUTA; ",full_path_file)
+                    #print("Full RUTA; ",full_path_file)
                     dcpimg = imageio.imread(full_path_file)
                     for keys in dcpimg.meta:
 
@@ -162,14 +164,16 @@ def upImgRest(request):
                     elif len(dcpimg.shape) ==3:
                         dcpimg = dcpimg[0]
 
-                    print("Imagen leida REST: ",dcpimg)
+                    #print("Imagen leida REST: ",dcpimg)
 
                     fig = plt.gcf()
+                    plt.figure(figsize=(1,1))
                     plt.axis('off')
+                    
                     plt.imshow(dcpimg, cmap='gray')
                     #plt.colorbar()
                     figure = BytesIO()
-                    plt.savefig(figure, format='jpg', dpi=300, facecolor="#7C7878")
+                    plt.savefig(figure, format='jpg', dpi=300, facecolor="#222")
 
                     plt.close()
                     d['url'] = {'base64': 'data:image/png;base64,' + base64.b64encode(figure.getvalue()).decode()}
@@ -208,6 +212,76 @@ def upImgRest(request):
             #print(str (position))
     upl.subir_img_rest(position)
     return JsonResponse(d)
+
+def particion(request):
+
+    if request.method == 'POST':
+        pxRest = request.POST['xRest']
+        pyRest = request.POST['yRest']
+        pxStress= request.POST['xStress']
+        pyStress = request.POST['yStress']
+        resu.pressed_rest(int(pxRest),int(pyRest))
+        resu.pressed_stress(int(pxStress),int(pyStress))
+        print("partition")
+
+        resu.punto_tocado()
+
+    figrest, posRest = resu.imprimir_imagenesRest(tipo=0)
+    # Como enviaremos la imagen en bytes la guardaremos en un buffer
+    bufRest = BytesIO()
+    canvasRest = FigureCanvasAgg(figrest)
+    canvasRest.print_png(bufRest)
+
+    #print stress
+
+    figstress, posStress = resu.imprimir_imagenesStress(tipo=0)
+
+    bufStress = BytesIO()
+    canvasStress = FigureCanvasAgg(figstress)
+    canvasStress.print_png(bufStress)
+
+    #nuevo diccionario
+
+    posImages = {**posRest, **posStress}
+
+    posImages['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
+
+    posImages['urlStress'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufStress.getvalue()).decode()}
+
+    return JsonResponse(posImages)
+
+
+def cambiar_particion(request):
+    if request.method == 'POST':
+        part = request.POST['particion']
+        zona = request.POST['zona']
+        print ("zona",zona)
+        resu.cambio_particion(int(part),int(zona))
+
+    figrest, posRest = resu.imprimir_imagenesRest(tipo=0)
+    # Como enviaremos la imagen en bytes la guardaremos en un buffer
+    bufRest = BytesIO()
+    canvasRest = FigureCanvasAgg(figrest)
+    canvasRest.print_png(bufRest)
+
+    #print stress
+
+    figstress, posStress = resu.imprimir_imagenesStress(tipo=0)
+
+    bufStress = BytesIO()
+    canvasStress = FigureCanvasAgg(figstress)
+    canvasStress.print_png(bufStress)
+
+    #nuevo diccionario
+
+    posImages = {**posRest, **posStress}
+
+    posImages['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
+
+    posImages['urlStress'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufStress.getvalue()).decode()}
+
+    return JsonResponse(posImages)
+
 
 def zonaImagen1(request):
 
@@ -324,8 +398,8 @@ def zonaImagen3(request):
 
     posImages = {**posRest, **posStress}
 
-    print("pos actual Rest", posImages['pos_actualRest'])
-    print("pos actual Stress", posImages['pos_actualStress'])
+    #print("pos actual Rest", posImages['pos_actualRest'])
+    #print("pos actual Stress", posImages['pos_actualStress'])
 
     posImages['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
 
@@ -411,7 +485,7 @@ def mov_imgAtrasRest(request):
     canvasRest = FigureCanvasAgg(figRest)
     canvasRest.print_png(bufRest)
 
-    print("pos actual Rest", posRest['pos_actualRest'])
+    #print("pos actual Rest", posRest['pos_actualRest'])
 
     posRest['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
 
@@ -426,7 +500,7 @@ def mov_imgDelanteRest(request):
     canvasRest = FigureCanvasAgg(figRest)
     canvasRest.print_png(bufRest)
 
-    print("pos actual Rest", posRest['pos_actualRest'])
+    #print("pos actual Rest", posRest['pos_actualRest'])
 
     posRest['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
 
@@ -548,7 +622,7 @@ def result(request):
     pos_rest = pos_actualRest + 1
     pos_stress = pos_actualStress + 1
 
-    print("nombre paciente: ",name_paciente)
+    #print("nombre paciente: ",name_paciente)
     #print("cantidad imagnenes: ",cantidad_img)
 
     data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,

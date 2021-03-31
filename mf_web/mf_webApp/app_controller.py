@@ -83,7 +83,6 @@ class AppController:
         checkpoint_path = os.getcwd() + '\\mf_webApp\\segmentation\\checkpoint\\model'
 
         print("RUTA CARGADA CORRECTAMENTE....................................")
-
         model = U_net()
         model.saver.restore(model.sess, checkpoint_path)
 
@@ -128,7 +127,7 @@ class AppController:
         
         print("processing")
         self.predict_img()
-        print("PROCESSION LISTA")
+        print("Procesamiento listo")
         file_pk = open('paq_stress.obj', 'wb')
         pickle.dump(self.img_stress, file_pk)
         file_pk.close()

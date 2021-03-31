@@ -31,7 +31,7 @@
     <!-- Container-->
     <div class="row">
         <div class="col-10 naranja">
-           <table border=0 width=100% align="center">
+           <table border=0 width=100% align="center" border="1">
               <tr>
                 <td align="center">
                   Rest image
@@ -52,14 +52,22 @@
                   <button type="button" id="btnSigStress" class="btn btn-primary btn-sm"> >> </button>
                 </td>
               </tr>
-              <tr height="510">
-                <td align="center" >
-                  <!-- {% include "mf_webApp/imageRest.html" %} -->
-                <img id='img_rest' src="img_rest.jpg"  width="460" height="460"/> 
+              <tr height="550">
+                <td align="center" width=50%>
+                <div id="pointRest" style="display:none;">
+                  <canvas id="canvasR" width="222" height="290" style="cursor:crosshair;">
+                    Si ves esto tu canvas no funciona
+                    </canvas> 
+                </div>
+                <img id='img_rest'  src="img_stress.png" height="400"/> 
                 </td>
-                <td align="center">
-                  <!-- {% include "mf_webApp/imageStress.html" %} -->
-                  <img  id='img_stress' src="img_stress.png"  width="460" height="460"/> 
+                <td align="center" width=50%>
+                  <div id="pointStress" style="display:none;">
+                    <canvas id="canvasS" width="222" height="290" style="cursor:crosshair;">
+                      Si ves esto tu canvas no funciona
+                      </canvas> 
+                  </div>
+                  <img  id='img_stress' src="img_rest.jpg" height="400" /> 
                 </td>
               </tr>
             </table>
@@ -86,7 +94,7 @@
               </tr>
               <tr>
                 <td>WW:</td>
-                <td><input id="ww_obt" name="ww_obt" type="text" value={{ww}} style="width : 100px; heigth : 10px"></input></td>
+                <td><input id="ww_obt" name="ww_obt" type="text" value={{ww}} style="width : 100px; heigth:10px"></input></td>
               </tr>
               <tr>
                 <td>WL:</td>
@@ -121,21 +129,41 @@
                 </td>
               </tr>
             </table>
+            <br>
+            <br>
+            <div id="cboxPartition" style="display:none;">
+            <table  width="100%" align="center">
+              <tr>
+                <td>Partition:</td>
+                <td align="center">   
+                    <select name="cboPart" id="cboPart" style="width : 100px; heigth:10px">
+                      <option id="part1" value="1">1</option>
+                      <option id="part2" value="2">2</option>
+                      <option id="part3" value="3">3</option>
+                      <option id="part4" value="4">4</option>
+                    </select>
+                </td>
+              </tr>
+            </table>
+          </div>
          </div>
 
          <!--Botones -->
          <div class="col-12 azul">
            <br>
           <center>
-            <button type="button" class="btn btn-primary">Export Results </button>
-            <button type="button" class="btn btn-primary">Divide Myocardium </button>
-            <button type="button" class="btn btn-primary">New Patient </button>
-          </center>
+           <!-- <button type="button" class="btn btn-primary">Export Results </button> -->
+             <button type="button" id="btnDivMi" class="btn btn-primary">Divide Myocardium </button>
+             <div id="myDiv" style="display:none;">
 
+             <button  type="button" id="btnConf" class="btn btn-primary">Confirm</button>
+             <button  type="button" id="btnDelete" class="btn btn-primary">Detele Points </button>
+             <button  type="button" id="btnCancel" class="btn btn-primary">Cancel</button>
+
+            </div>
+           <!-- <button type="button" class="btn btn-primary">New Patient </button> -->
+          </center>
          </div>
     </div>
-
-   
-
 
 {% endblock %}
