@@ -10,11 +10,11 @@ To execute the application run "test.py", you can run it via terminal commands o
 for terminal commands example:
 
 ```bash
-C:\Users\wesstl>conda activate myocardial_perfusion
+C:\Users\user>conda activate mf_web
 
-(myocardial_perfusion) C:\Users\wesstl>cd C:\Users\wesstl\Documents\GitHub\myocardial-perfusion-and-segmentation-API\Interface
+(mf_web) C:\Users\user>cd C:\Users\user\Documents\GitHub\mf_web
 
-(myocardial_perfusion) C:\Users\wesstl\Documents\GitHub\myocardial-perfusion-and-segmentation-API\Interface>python test.py
+(mf_web) C:\Users\user\Documents\GitHub\mf_web>python manage.py runserver
 ```
 just remember to use the delivered virtual environment (environment.yml) and place the path where the project was saved.
 
