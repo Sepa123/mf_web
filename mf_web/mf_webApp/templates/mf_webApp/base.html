@@ -29,7 +29,7 @@
   <body>
     <!-- Navegacion home -->
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
       <a class="navbar-brand" href="{% url 'home' %}">Myocardial Perfusion</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -53,6 +53,11 @@
         </ul>
       </div>
     </nav>
+    <br>
+    <br>
+    <br>
+    
+
     <!-- bloque cambiante-->
 
     {% block content %}
@@ -71,62 +76,43 @@
       </div>
     </footer> -->
     <!-- footer -->
+    <br> 
 		<footer>
 			<section class="mainFooter">
 				<div class="row" style="background-color: rgb(97, 93, 93);">
 					<div class="col-2">	
             <br>					
 							<center>
-							<img width="120" height="56" src="https://isci.cl/wp-content/uploads/2020/01/logo-1-1.png" alt="" loading="lazy" />							
+              <a target="_blank" href="https://isci.cl/">
+							<img width="120" height="56" src="https://isci.cl/wp-content/uploads/2020/01/logo-1-1.png" alt="" loading="lazy" />	</a>						
 								<p>República 695, Santiago Centro, Chile.<br />
                   +56 2 2689 4429<br />
                   +56 2 2689 4403<br />
                   <a href="#">contacto@isci.cl</a></p>	
                   </center>						
 					</div>
-				<!---	<div class="col-3">
-            <br><br>
-						<div class="row">
-              
-								<h6 class="">
-																	Institución Albergante																
-								</h6>
-							<div class="">							
-								<a target="_blank" href="http://ingenieria.uchile.cl/">
-										<img src="https://isci.cl/wp-content/uploads/2019/12/logo-38.png" alt="" width="100" height="50">
-								</a>	
-								<a target="_blank" href="https://www.uchile.cl/">
-										<img src="https://isci.cl/wp-content/uploads/2019/12/logo-37.png" alt="" width="100" height="50">
-								</a>	
-								</div>
-						</div>
+          <div class="col-2">	
+            <br>					
+							<center>
+							<img width="140" height="80" src="https://www.enriquelanzarini.cl/wp-content/uploads/2020/04/Logo_Hospital_Clinico_UCH_1.png" alt="" loading="lazy" />							
+                  </center>						
 					</div>
-					<div class="col-3">
-            <br><br>
-						<div class="row">
-								<h6 class="title">
-																	Institución Asociada																
-								</h6>
-							<div class="">							
-									<a target="_blank" href="https://www.uc.cl/">
-										<img src="https://isci.cl/wp-content/uploads/2019/12/logo-39.png" alt="" width="100" height="50">
-									</a>	
-							</div>
-						</div>
-					</div>
+          <br>					
+							<center>
+                <h6 class="">
+                  <br><br>
+                  Institución Albergante																
+                  </h6>
+                  <div class="">							
+                  <a target="_blank" href="http://ingenieria.uchile.cl/">
+                      <img src="https://isci.cl/wp-content/uploads/2019/12/logo-38.png" alt="" width="100" height="50">
+                  </a>	
+                  <a target="_blank" href="https://www.uchile.cl/">
+                      <img src="https://isci.cl/wp-content/uploads/2019/12/logo-37.png" alt="" width="100" height="50">
+                  </a>	
 
-					<div class="col-3">						
-						<div class="row">
-							<h6 class="title">
-																	Patrocinador															</h6>
-							<div class="icons">
-									<a target="_blank" href="https://www.anid.cl/">
-										<img src="https://isci.cl/wp-content/uploads/2020/01/LogoANID.png" alt="" width="85" height="104" >
-									</a>	
-							</div>
-						</div>
+                  </center>						
 					</div>
-				</div> -->
 			</section>
 		</footer>
 

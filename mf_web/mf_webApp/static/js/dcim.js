@@ -518,7 +518,8 @@ function drawCoordinatesS(x,y){
 
     var x = document.getElementById("myDiv");
     var btnDivMi = document.getElementById("btnDivMi");
-
+    var btnNew = document.getElementById("btnNew");
+    
     var img_rest =document.getElementById("img_rest");
     var img_stress=  document.getElementById("img_stress");
 
@@ -529,6 +530,7 @@ function drawCoordinatesS(x,y){
 if (x.style.display === "none") {
     //alert("Aparesco div") Aparece el div
     btnDivMi.style.display = "none";
+    btnNew.style.display = "none";
     img_rest.style.display = "none";
     img_stress.style.display = "none";
     //img_stress.style.display = "none";
@@ -538,6 +540,7 @@ if (x.style.display === "none") {
     x.style.display = "block";
 } else {
     // alert("Desaparesco")
+    btnNew.style.display = "none";
     btnDivMi.style.display = "none";
     x.style.display = "none";
 }
@@ -545,6 +548,7 @@ if (x.style.display === "none") {
 
 $("#btnCancel").click(function(){
     var x = document.getElementById("myDiv");
+    var btnConfirm = document.getElementById("btnComplete");
     var btnDivMi = document.getElementById("btnDivMi");
     var img_rest =document.getElementById("img_rest");
     var img_stress=  document.getElementById("img_stress");
