@@ -1,19 +1,39 @@
 {% extends "mf_webApp/base.html" %}
 
+{% block title %} Patient List {% endblock %}
+
 {% load static %}
 
 {% block content %}
-    <!-- Introduccion-->
+<br>
+<h2>Patient List</h2>
+<table class="table table-hover" width=80%>
+    <tr class="table-info">
+      <td>ID</td>
+      <td>Patient</td>
+      <td>Study desc</td>
+      <td>Series desc</td>
+      <td>Series id</td>
+    </tr>
+    {% if pacientes %}
+    {% for paciente in pacientes %}
+    <tr>
+      <input hidden id="id_patient" name="id_patient" type="text" value={{paciente.id}}></input>
+      <td>{{ paciente.id }}</td>
+      <td>{{ paciente.patient }}</td>
+      <td>{{ paciente.study_desc }}</td>
+      <td>{{ paciente.series_desc }}</td>
+      <td>{{ paciente.series_id }}</td>
+      <td><a href="{% url 'delete' id_patient=paciente.id %}" class="btn btn-danger">Delete</a></td>
+    </tr>
+    {% endfor %}
 
+    {% else %}
+    <h1>No patient</h1>
+    {% endif %}
+</table>
 
-    <div class="jumbotron">
-        <h1 class="display-3">Bienvenido a Myocardial Perfusion! ()Esta es list.html </h1>
-        <p class="lead">una herramienta diseñada para procesar imagenes .dcm para segmentacion miocardica.</p>
-        <hr class="my-4">
-        <p>Se pueden realizar analisis de imagenes del corazon.</p>
-        <p class="lead">
-          <a class="btn btn-primary btn-lg" href="#" role="button">Ver mas</a>
-        </p>
-      </div>
-
+<br>
+<a class="btn btn-primary " href="javascript: history.go(-1)">Back</a>
+<br>
 {% endblock %}

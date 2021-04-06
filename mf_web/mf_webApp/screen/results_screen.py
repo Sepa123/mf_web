@@ -109,7 +109,11 @@ class ResultScreen:
     def cambio_particion(self, particion, zona):
        # particion = self.valor_div.get()
         self.subdiv = 'sub' + str(particion)
-        self.curve_print(zona)
+        figGraf, tablaP = self.curve_print(zona)
+
+        return tablaP
+
+        
 
     def recarga_img(self, ww_obt, wl_obt):
         self.apc.img_stress.contenido[self.slice_select_stress].wl = int(wl_obt)

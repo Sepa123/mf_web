@@ -10,6 +10,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+tf.reset_default_graph()
 
 from ..parameters import constants
 from ..parameters import errors
@@ -82,6 +83,7 @@ def batchnorm_layer(
         scale=True,
         batchnorm=constants.BN,
         reuse=False,
+        #reuse=tf.AUTO_REUSE,
         training=False):
     """Buils a batch normalization layer.
     By default, it uses a faster, fused implementation if possible.

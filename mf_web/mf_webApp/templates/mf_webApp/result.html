@@ -64,7 +64,7 @@
                 <td align="center" width=50%>
                   <div id="pointStress" style="display:none;">
                     <canvas id="canvasS" width="222" height="290" style="cursor:crosshair;">
-                      Si ves esto tu canvas no funciona
+                      Canvas does not work
                       </canvas> 
                   </div>
                   <img  id='img_stress' src="img_rest.jpg" height="400" /> 
@@ -152,20 +152,25 @@
          <div class="col-12 azul">
            <br>
           <center>
-           <!-- <button type="button" class="btn btn-primary">Export Results </button> -->
-             <button type="button" id="btnDivMi" class="btn btn-primary">Divide Myocardium </button>
+             <input hidden id="id_patient" name="id_patient" type="text" value={{id_patient}}></input>
+             <div id="div1">
+             <button type="button" id="btnSave" class="btn btn-primary">Save Results</button>&nbsp;&nbsp;
+             <button type="button" id="btnDivMi" class="btn btn-primary">Divide Myocardium </button>&nbsp;&nbsp;
+             <a class="btn btn-secondary" target="" href="{% url 'newPatient' %}">New Patient</a> 
+
+             </div>
+
              <div id="myDiv" style="display:none;">
-
              <button  type="button" id="btnConf" class="btn btn-primary">Confirm</button>&nbsp;
-             <button  type="button" id="btnDelete" class="btn btn-primary">Detele Points</button>&nbsp;
-             <button hidden type="button" id="btnComplete" class="btn btn-primary">Complete Section</button>&nbsp;
              <button  type="button" id="btnCancel" class="btn btn-primary">Cancel</button>
+            </div>  
 
+            <div id="div3" style="display:none;">
+              <button type="button" id="btnComplete" class="btn btn-primary">Complete Section</button>&nbsp;
             </div>
-           
-           <button type="button" id="btnNew" class="btn btn-primary">New Patient</button>
           </center>
          </div>
+         
     </div>
 
 {% endblock %}

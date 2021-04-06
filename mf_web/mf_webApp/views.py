@@ -14,6 +14,10 @@ matplotlib.use('Agg')
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+
+from mf_webApp.models import Patient as pat, Curve as cur, CurveDivide as curd
 
 from django.shortcuts import render, HttpResponse, redirect
 
@@ -250,7 +254,6 @@ def particion(request):
 
     return JsonResponse(posImages)
 
-
 def cambiar_particion(request):
     if request.method == 'POST':
         part = request.POST['particion']
@@ -281,7 +284,6 @@ def cambiar_particion(request):
     posImages['urlStress'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufStress.getvalue()).decode()}
 
     return JsonResponse(posImages)
-
 
 def zonaImagen1(request):
 
@@ -542,6 +544,7 @@ def processing(request):
 
     #resu.imprimir_imagenes(tipo=0)
     # carga los resultados de las imagenes
+
     resu.curve_print(1)
 
     return redirect("result")
@@ -609,6 +612,11 @@ def result(request):
     series_des_patient = apc.patient.s_series_desc
     study_patient = apc.patient.s_study_desc
 
+    p = pat(patient=name_paciente, study_desc=study_patient,series_desc=series_des_patient,series_id=series_id_patient)
+    p.save()
+
+    id = p.id
+
     img, pos_actualRest, l_button, r_button = apc.img_rest.contenido[0].current_img(1,2)
 
     img, pos_actualStress, l_button, r_button = apc.img_stress.contenido[0].current_img(1,2)
@@ -625,9 +633,11 @@ def result(request):
     #print("nombre paciente: ",name_paciente)
     #print("cantidad imagnenes: ",cantidad_img)
 
+
     data_patient = {"name_pat":name_paciente,"id_pat":series_id_patient,"series_des_pat":series_des_patient,
                     "study_pat":study_patient,"cant_stress":cant_stress,"cant_rest":cant_rest,"pos_rest":pos_rest,
-                    "pos_stress":pos_stress, "ww":ww, "wl":wl}
+                    "pos_stress":pos_stress, "ww":ww, "wl":wl, "id_patient": id }
+
 
     #data_patient['urlRest'] = {'base64': 'data:image/png;base64,' + base64.b64encode(bufRest.getvalue()).decode()}
 
@@ -639,7 +649,195 @@ def result(request):
 
     return render(request, "mf_webApp/result.html",data_patient)
 
+
+def dataList(request):
+
+    return render(request, "mf_webApp/listData.html")
+
 def lista(request):
 
-    return render(request, "mf_webApp/list.html")
+    paciente = pat.objects.all()
+
+    curva = cur.objects.all()
+
+    ctxp = {"pacientes":paciente}
+    ctxc = {"curvas":curva}
+
+    ctx = {**ctxp, **ctxc}
+
+    return render(request, "mf_webApp/list.html",ctx)
+
+def listaResultado(request):
+
+    paciente = pat.objects.all()
+
+    curva = cur.objects.all()
+
+    ctxp = {"pacientes":paciente}
+    ctxc = {"curvas":curva}
+
+    ctx = {**ctxp, **ctxc}
+
+    return render(request, "mf_webApp/listResult.html",ctx)
+
+ 
+def saveData(request):
+
+    #Guardar los resultados en la base de datos
+
+    figGraf2, tablaEp = resu.curve_print(2)
+    figGraf3, tablaEn = resu.curve_print(3)
+    figGraf1, tablaBl = resu.curve_print(1)
+
+    id = request.POST['id_patient']
+
+    obj = pat.objects.get(id=int(id))
+
+    blood = cur(id_patient= obj, zone="Blood", area_rest= float(tablaBl['area_rest']), peak_rest=float(tablaBl['res_peak_rest']),
+                slope_rest=float(tablaBl['res_pend_rest']),area_stress=float(tablaBl['area_stress']),peak_stress=float(tablaBl['res_peak_stress']),
+                slope_stress= float(tablaBl['res_pend_stress']),coefficent= float(tablaBl['res_ratio_value']))
+    blood.save()
+
+    epi = cur(id_patient= obj, zone="Epicardium", area_rest= float(tablaEp['area_rest']), peak_rest=float(tablaEp['res_peak_rest']),
+                slope_rest=float(tablaEp['res_pend_rest']),area_stress=float(tablaEp['area_stress']),peak_stress=float(tablaEp['res_peak_stress']),
+                slope_stress= float(tablaEp['res_pend_stress']),coefficent= float(tablaEp['res_ratio_value']))
+    epi.save()
+
+    endo = cur(id_patient= obj, zone="Endocardium", area_rest= float(tablaEn['area_rest']), peak_rest=float(tablaEn['res_peak_rest']),
+                slope_rest=float(tablaEn['res_pend_rest']),area_stress=float(tablaEn['area_stress']),peak_stress=float(tablaEn['res_peak_stress']),
+                slope_stress= float(tablaEn['res_pend_stress']),coefficent= float(tablaEn['res_ratio_value']))
+    endo.save()
+
+    messages.success(request, "Usuario guardado correctamente")
+
+
+    id_p = dict (id_patient = id)
+
+
+   # id_p =  {"id_patient": str(p.id)}
+
+    return JsonResponse(id_p)
+
+def delete(request, id_patient):
+
+    id = id_patient
+
+    paciente = pat.objects.get(id=int(id))
+
+    curva = cur.objects.all()
+    paciente.delete()
+    ctxp = {"pacientes":paciente}
+    ctxc = {"curvas":curva}
+
+    ctx = {**ctxp, **ctxc}
+
+    return redirect("listPatient")
+
+def saveDataDivide(request):
+
+    #Guardar los resultados de la division en la base de datos
+
+    tablaBl2 = resu.cambio_particion(2,1)
+    tablaEp2 = resu.cambio_particion(2,2)
+    tablaEn2 = resu.cambio_particion(2,3)
+
+    tablaBl3 = resu.cambio_particion(3,1)
+    tablaEp3 = resu.cambio_particion(3,2)
+    tablaEn3 = resu.cambio_particion(3,3)
+
+    tablaBl4 = resu.cambio_particion(4,1)
+    tablaEp4 = resu.cambio_particion(4,2)
+    tablaEn4 = resu.cambio_particion(4,3)
+
+    tablaEp1 = resu.cambio_particion(1,2)
+    tablaEn1 = resu.cambio_particion(1,3)
+    tablaBl1 = resu.cambio_particion(1,1) 
+    
+    id = request.POST['id_patient']
+
+    obj = pat.objects.get(id=int(id))
+
+    part1_1 = curd(id_patient= obj, zone="Blood", partition=1, area_rest= float(tablaBl1['area_rest']), peak_rest=float(tablaBl1['res_peak_rest']),
+                   slope_rest=float(tablaBl1['res_pend_rest']),area_stress=float(tablaBl1['area_stress']),peak_stress=float(tablaBl1['res_peak_stress']),
+                   slope_stress= float(tablaBl1['res_pend_stress']),coefficent= float(tablaBl1['res_ratio_value']))
+    part1_1.save()
+
+    part1_2 = curd(id_patient= obj, zone="Epicardium", partition=1, area_rest= float(tablaEp1['area_rest']), peak_rest=float(tablaEp1['res_peak_rest']),
+                   slope_rest=float(tablaEp1['res_pend_rest']),area_stress=float(tablaEp1['area_stress']),peak_stress=float(tablaEp1['res_peak_stress']),
+                   slope_stress= float(tablaEp1['res_pend_stress']),coefficent= float(tablaEp1['res_ratio_value']))
+    part1_2.save()
+
+    part1_3 = curd(id_patient= obj, zone="Endocardium", partition=1, area_rest= float(tablaEn1['area_rest']), peak_rest=float(tablaEn1['res_peak_rest']),
+                   slope_rest=float(tablaEn1['res_pend_rest']),area_stress=float(tablaEn1['area_stress']),peak_stress=float(tablaEn1['res_peak_stress']),
+                   slope_stress= float(tablaEn1['res_pend_stress']),coefficent= float(tablaEn1['res_ratio_value']))
+    part1_3.save()
+
+
+    part2_1 = curd(id_patient= obj, zone="Blood", partition=2, area_rest= float(tablaBl2['area_rest']), peak_rest=float(tablaBl2['res_peak_rest']),
+                   slope_rest=float(tablaBl2['res_pend_rest']),area_stress=float(tablaBl2['area_stress']),peak_stress=float(tablaBl2['res_peak_stress']),
+                   slope_stress= float(tablaBl2['res_pend_stress']),coefficent= float(tablaBl2['res_ratio_value']))
+    part2_1.save()
+
+    part2_2 = curd(id_patient= obj, zone="Epicardium", partition=2, area_rest= float(tablaEp2['area_rest']), peak_rest=float(tablaEp2['res_peak_rest']),
+                   slope_rest=float(tablaEp2['res_pend_rest']),area_stress=float(tablaEp2['area_stress']),peak_stress=float(tablaEp2['res_peak_stress']),
+                   slope_stress= float(tablaEp2['res_pend_stress']),coefficent= float(tablaEp2['res_ratio_value']))
+    part2_2.save()
+
+    part2_3 = curd(id_patient= obj, zone="Endocardium", partition=2, area_rest= float(tablaEn2['area_rest']), peak_rest=float(tablaEn2['res_peak_rest']),
+                   slope_rest=float(tablaEn2['res_pend_rest']),area_stress=float(tablaEn2['area_stress']),peak_stress=float(tablaEn2['res_peak_stress']),
+                   slope_stress= float(tablaEn2['res_pend_stress']),coefficent= float(tablaEn2['res_ratio_value']))
+    part2_3.save()
+
+    part3_1 = curd(id_patient= obj, zone="Blood", partition=3, area_rest= float(tablaBl3['area_rest']), peak_rest=float(tablaBl3['res_peak_rest']),
+                   slope_rest=float(tablaBl3['res_pend_rest']),area_stress=float(tablaBl3['area_stress']),peak_stress=float(tablaBl3['res_peak_stress']),
+                   slope_stress= float(tablaBl3['res_pend_stress']),coefficent= float(tablaBl3['res_ratio_value']))
+    part3_1.save()
+
+    part3_2 = curd(id_patient= obj, zone="Epicardium", partition=3, area_rest= float(tablaEp3['area_rest']), peak_rest=float(tablaEp3['res_peak_rest']),
+                   slope_rest=float(tablaEp3['res_pend_rest']),area_stress=float(tablaEp3['area_stress']),peak_stress=float(tablaEp3['res_peak_stress']),
+                   slope_stress= float(tablaEp3['res_pend_stress']),coefficent= float(tablaEp3['res_ratio_value']))
+    part3_2.save()
+
+    part3_3 = curd(id_patient= obj, zone="Endocardium", partition=3, area_rest= float(tablaEn3['area_rest']), peak_rest=float(tablaEn3['res_peak_rest']),
+                   slope_rest=float(tablaEn3['res_pend_rest']),area_stress=float(tablaEn3['area_stress']),peak_stress=float(tablaEn3['res_peak_stress']),
+                   slope_stress= float(tablaEn3['res_pend_stress']),coefficent= float(tablaEn3['res_ratio_value']))
+    part3_3.save() 
+
+    part4_1 = curd(id_patient= obj, zone="Blood", partition=4, area_rest= float(tablaBl4['area_rest']), peak_rest=float(tablaBl4['res_peak_rest']),
+                   slope_rest=float(tablaBl4['res_pend_rest']),area_stress=float(tablaBl4['area_stress']),peak_stress=float(tablaBl4['res_peak_stress']),
+                   slope_stress= float(tablaBl4['res_pend_stress']),coefficent= float(tablaBl4['res_ratio_value']))
+    part4_1.save() 
+
+    part4_2 = curd(id_patient= obj, zone="Epicardium", partition=4, area_rest= float(tablaEp4['area_rest']), peak_rest=float(tablaEp4['res_peak_rest']),
+                   slope_rest=float(tablaEp4['res_pend_rest']),area_stress=float(tablaEp4['area_stress']),peak_stress=float(tablaEp4['res_peak_stress']),
+                   slope_stress= float(tablaEp4['res_pend_stress']),coefficent= float(tablaEp4['res_ratio_value']))
+    part4_2.save()
+
+    part4_3 = curd(id_patient= obj, zone="Endocardium", partition=4, area_rest= float(tablaEn4['area_rest']), peak_rest=float(tablaEn4['res_peak_rest']),
+                   slope_rest=float(tablaEn4['res_pend_rest']),area_stress=float(tablaEn4['area_stress']),peak_stress=float(tablaEn4['res_peak_stress']),
+                   slope_stress= float(tablaEn4['res_pend_stress']),coefficent= float(tablaEn4['res_ratio_value']))
+    part4_3.save()
+
+    return JsonResponse({"respuesta": "si funciona"})
+
+def newPatient(request):
+    apc.new_patient()
+
+    return redirect("upload")
+
+def listaResultadoDivision(request):
+
+    paciente = pat.objects.all()
+
+    curvad = curd.objects.all()
+
+    ctxp = {"pacientes":paciente}
+    ctxc = {"curvasd":curvad}
+
+    ctx = {**ctxp, **ctxc}
+
+    return render(request, "mf_webApp/listDivide.html",ctx)
+
+
+
 

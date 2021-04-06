@@ -1,0 +1,22 @@
+{% extends "mf_webApp/base.html" %}
+
+{% block title %} Result List {% endblock %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<div class="col-12">
+
+<h2>Result List</h2>
+<br>
+<a class="btn btn-primary " href="{% url 'listPatient' %}">List patient</a>
+<br><br>
+<a class="btn btn-primary " href="{% url 'listResult' %}">List result</a>
+<br><br>
+<a class="btn btn-primary " href="{% url 'listDivide' %}">List divide</a>
+<br><br>
+
+</div>
+
+{% endblock %}

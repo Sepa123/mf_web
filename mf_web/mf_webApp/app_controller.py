@@ -137,21 +137,12 @@ class AppController:
 
         pass
 
-   # def to_result_screen(self):
-    #    self.clean_screen()
-     #   res_screen = ResultScreen(self.frame_data, self.frame_opt, self.frame_img, self)
-      #  res_screen.start()
+    def new_patient(self):
 
- #   def new_patient(self):
-  #      self.clean_screen_pack()
-   #     frame_ul = UploadImage(frame_lateral=self.frame_data, frame_opciones=self.frame_opt,
-    #                           frame_principal=self.frame_img, parent=self)
-     #   frame_ul.start()
+        self.img_rest = PaqImgModel("Rest")
+        self.img_stress = PaqImgModel("Stress")
 
-#        self.img_rest = PaqImgModel("Rest")
- #       self.img_stress = PaqImgModel("Stress")
-#
- #       self.dir_img_rest = ""
-  #      self.dir_img_stress = ""
+        self.dir_img_rest = ""
+        self.dir_img_stress = ""
 
-   #     self.patient = Patient()
+        self.patient = Patient()

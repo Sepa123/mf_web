@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+#tf.reset_default_graph()
 
 from ...modules import layers
 from ...parameters import param_keys

@@ -138,29 +138,37 @@ $(document).ready( function() {
         xhr.send(formData);
     });
 
+    $('form#form_one').submit(function(e){
+        $(this).children('input[type=submit]').attr('disabled', 'disabled');
+        //var btnUpload = document.getElementById("btnUpload");
+        $("#btnUpload").prop('disabled', true);
+        //btnUpload.style.display = "none";
+
+    });
+
 
     // Botones dE Zonas de interes para los graficos
     var zona;
 
     function graphicsdata(tabla){
-        var json = JSON.parse(tabla)
+        var json = JSON.parse(tabla);
 
-        $('#area_rest').html("")
-        $('#area_stress').html("")
-        $('#res_peak_rest').html("")
-        $('#res_peak_stress').html("")
-        $('#res_pend_rest').html("")
-        $('#res_pend_stress').html("")
-        $('#res_ratio_value').html("")
-        $('#imgGraphic').html("")
+        $('#area_rest').html("");
+        $('#area_stress').html("");
+        $('#res_peak_rest').html("");
+        $('#res_peak_stress').html("");
+        $('#res_pend_rest').html("");
+        $('#res_pend_stress').html("");
+        $('#res_ratio_value').html("");
+        $('#imgGraphic').html("");
 
-        $('#area_rest').append(json.area_rest)
-        $('#area_stress').append(json.area_stress)
-        $('#res_peak_rest').append(json.res_peak_rest)
-        $('#res_peak_stress').append(json.res_peak_stress)
-        $('#res_pend_rest').append(json.res_pend_rest)
-        $('#res_pend_stress').append(json.res_pend_stress)
-        $('#res_ratio_value').append(json.res_ratio_value)
+        $('#area_rest').append(json.area_rest);
+        $('#area_stress').append(json.area_stress);
+        $('#res_peak_rest').append(json.res_peak_rest);
+        $('#res_peak_stress').append(json.res_peak_stress);
+        $('#res_pend_rest').append(json.res_pend_rest);
+        $('#res_pend_stress').append(json.res_pend_stress);
+        $('#res_ratio_value').append(json.res_ratio_value);
 
         if (json.url!=null){
     
@@ -177,7 +185,7 @@ $(document).ready( function() {
         var fd = new FormData();
         zona = "1";
 
-        fd.append("zona", zona)
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -191,9 +199,9 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        zona = "2"
+        zona = "2";
 
-        fd.append("zona", zona)
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -207,9 +215,9 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        zona = "3"
+        zona = "3";
 
-        fd.append("zona", zona)
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -225,12 +233,12 @@ $(document).ready( function() {
 
     function imagesdata(posImages){
         var json = JSON.parse(posImages)
-        $('#img_rest').html("")
-        $('#img_stress').html("")
-        $('#pos_rest').html("")
-        $('#pos_stress').html("")
-        $('#pos_rest').append(json.pos_actualRest)
-        $('#pos_stress').append(json.pos_actualStress)
+        $('#img_rest').html("");
+        $('#img_stress').html("");
+        $('#pos_rest').html("");
+        $('#pos_stress').html("");
+        $('#pos_rest').append(json.pos_actualRest);
+        $('#pos_stress').append(json.pos_actualStress);
 
         if (json.urlRest!=null || json.urlStress!=null){
     
@@ -248,9 +256,9 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        zona = "1"
+        zona = "1";
 
-        fd.append("zona", zona)
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -264,9 +272,9 @@ $(document).ready( function() {
 
         var fd = new FormData();
 
-        zona = "2"
+        zona = "2";
 
-        fd.append("zona", zona)
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -279,8 +287,8 @@ $(document).ready( function() {
     $("#btnEndoIma").click(function(){
 
         var fd = new FormData();
-        zona = "3"
-        fd.append("zona", zona)
+        zona = "3";
+        fd.append("zona", zona);
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
          if (this.readyState == 4 && this.status == 200) {
@@ -297,14 +305,15 @@ $(document).ready( function() {
 
 function imagesmovedataRest(posRest){
     var json = JSON.parse(posRest)
-    $('#img_rest').html("")
-    $('#img_stress').html("")
-    $('#pos_rest').html("")
-    $('#cant_rest').html("")
+    $('#img_rest').html("");
+    $('#img_stress').html("");
+    $('#pos_rest').html("");
+    $('#cant_rest').html("");
 
 
-    $('#pos_rest').append(json.pos_actualRest)
-    $('#cant_rest').append(json.cantidad_imgRest)
+    $('#pos_rest').append(json.pos_actualRest);
+    $('#cant_rest').append(json.cantidad_imgRest);
+
 
 
 
@@ -350,14 +359,14 @@ function imagesmovedataRest(posRest){
 
 
 function imagesmovedataStress(posStress){
-    var json = JSON.parse(posStress)
-    $('#img_rest').html("")
-    $('#img_stress').html("")
-    $('#pos_stress').html("")
-    $('#cant_stress').html("")
+    var json = JSON.parse(posStress);
+    $('#img_rest').html("");
+    $('#img_stress').html("");
+    $('#pos_stress').html("");
+    $('#cant_stress').html("");
 
-    $('#pos_stress').append(json.pos_actualStress)
-    $('#cant_stress').append(json.cantidad_imgStress)
+    $('#pos_stress').append(json.pos_actualStress);
+    $('#cant_stress').append(json.cantidad_imgStress);
 
     if (json.urlStress!=null){
 
@@ -405,8 +414,8 @@ function imagesmovedataStress(posStress){
         var ww = Number(document.getElementById('ww_obt').value);
         var wl = Number(document.getElementById('wl_obt').value);
 
-        fd.append("ww_obt", ww)
-        fd.append("wl_obt", wl)
+        fd.append("ww_obt", ww);
+        fd.append("wl_obt", wl);
 
          var xhr = new XMLHttpRequest();
          xhr.onreadystatechange = function() {
@@ -497,7 +506,7 @@ function drawCoordinatesS(x,y){
    ctxS.beginPath();
    ctxS.arc(x, y, pointSize, 0, Math.PI * 2, true);
    //ctx.drawImage(img,187,56,278,369,-3,-2,222,295)
-   ctxS.drawImage(imgS,187,56,280,372,-2,-2,224,297)
+   ctxS.drawImage(imgS,187,56,280,372,-2,-2,224,297);
    ctxS.fill();
    
 }
@@ -505,7 +514,7 @@ function drawCoordinatesS(x,y){
 //Botones para la division
 
 
-
+var btnSaveClick = false;
 
    $("#btnDivMi").click(function(){
     //ctx.drawImage(img,190,58,277,368,220,160,221,294)
@@ -517,41 +526,50 @@ function drawCoordinatesS(x,y){
     ctxS.drawImage(imgS,187,56,280,372,-2,-2,224,297);
 
     var x = document.getElementById("myDiv");
-    var btnDivMi = document.getElementById("btnDivMi");
-    var btnNew = document.getElementById("btnNew");
+    var div1 = document.getElementById("div1");
     
     var img_rest =document.getElementById("img_rest");
     var img_stress=  document.getElementById("img_stress");
 
     var pointRest=  document.getElementById("pointRest");
     var pointStress=  document.getElementById("pointStress");
-    
 
-if (x.style.display === "none") {
-    //alert("Aparesco div") Aparece el div
-    btnDivMi.style.display = "none";
-    btnNew.style.display = "none";
-    img_rest.style.display = "none";
-    img_stress.style.display = "none";
-    //img_stress.style.display = "none";
+    if(btnSaveClick == true){
 
-    pointRest.style.display = "block";
-    pointStress.style.display = "block";
-    x.style.display = "block";
-} else {
-    // alert("Desaparesco")
-    btnNew.style.display = "none";
-    btnDivMi.style.display = "none";
-    x.style.display = "none";
-}
+        if (x.style.display === "none") {
+            //alert("Aparesco div") Aparece el div
+            //btnDivMi.style.display = "none";
+            //btnNew.style.display = "none";
+            img_rest.style.display = "none";
+            img_stress.style.display = "none";
+            //btnSave.style.display = "none"
+            div1.style.display = "none"
+            //img_stress.style.display = "none";
+
+            pointRest.style.display = "block";
+            pointStress.style.display = "block";
+            x.style.display = "block";
+        } else {
+            // alert("Desaparesco")
+            //btnSave.style.display = "none"
+            //btnNew.style.display = "none";
+            //btnDivMi.style.display = "none";
+            div1.style.display = "none";
+            x.style.display = "none";
+        }
+    }else{
+        alert("Before pressing save data.")
+    }
 });
 
 $("#btnCancel").click(function(){
     var x = document.getElementById("myDiv");
-    var btnConfirm = document.getElementById("btnComplete");
+    var div1 = document.getElementById("div1");
     var btnDivMi = document.getElementById("btnDivMi");
     var img_rest =document.getElementById("img_rest");
     var img_stress=  document.getElementById("img_stress");
+    var btnSave = document.getElementById("btnSave");
+    var btnNew = document.getElementById("btnNew");
 
     var pointRest=  document.getElementById("pointRest");
     var pointStress=  document.getElementById("pointStress");
@@ -559,28 +577,34 @@ $("#btnCancel").click(function(){
 if (x.style.display === "none") {
     // alert("Aparesco")
     btnDivMi.style.display = "none";
+    btnSave.style.display = "none";
+    btnNew.style.display = "none";
+    div1.style.display = "none";
     x.style.display = "block";
 } else {
     // alert("Desaparesco")
-    btnDivMi.style.display = "block";
+    //btnDivMi.style.display = "block";
     img_rest.style.display = "block";
     img_stress.style.display = "block";
+    //btnSave.style.display = "block";
+    div1.style.display = "block";
+    //btnNew.style.display = "none"
     
     pointRest.style.display = "none";
-    pointStress.style.display = "none"
+    pointStress.style.display = "none";
     x.style.display = "none";
 }
 });
 
 
 function imagepartition(partImage){
-    var json = JSON.parse(partImage)
-    $('#img_rest').html("")
-    $('#img_stress').html("")
-    $('#pos_rest').html("")
-    $('#pos_stress').html("")
-    $('#pos_rest').append(json.pos_actualRest)
-    $('#pos_stress').append(json.pos_actualStress)
+    var json = JSON.parse(partImage);
+    $('#img_rest').html("");
+    $('#img_stress').html("");
+    $('#pos_rest').html("");
+    $('#pos_stress').html("");
+    $('#pos_rest').append(json.pos_actualRest);
+    $('#pos_stress').append(json.pos_actualStress);
 
     if (json.urlRest!=null || json.urlStress!=null){
 
@@ -605,16 +629,16 @@ $("#btnConf").click(function(){
         stressClick = false;
         var fd = new FormData();
 
-        xRest = parseInt(pxRest)
-        yRest = parseInt(pyRest)
+        xRest = parseInt(pxRest);
+        yRest = parseInt(pyRest);
 
-        xStress = parseInt(pxStress)
-        yStress = parseInt(pyStress)
+        xStress = parseInt(pxStress);
+        yStress = parseInt(pyStress);
 
-        fd.append("xRest", xRest)
-        fd.append("yRest", yRest)
-        fd.append("xStress", xStress)
-        fd.append("yStress", yStress)
+        fd.append("xRest", xRest);
+        fd.append("yRest", yRest);
+        fd.append("xStress", xStress);
+        fd.append("yStress", yStress);
 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -626,8 +650,12 @@ $("#btnConf").click(function(){
         xhr.send(fd); 
 
         var x = document.getElementById("myDiv");
+        var div3 = document.getElementById("div3");
+        var div1 = document.getElementById("div1");
+        var myDiv = document.getElementById("myDiv");
         var cbo = document.getElementById("cboxPartition");
         var btnDivMi = document.getElementById("btnDivMi");
+        var btnComplete = document.getElementById("btnComplete");
 
         var img_rest =document.getElementById("img_rest");
         var img_stress=  document.getElementById("img_stress");
@@ -639,20 +667,23 @@ $("#btnConf").click(function(){
         if (x.style.display === "none") {
             // alert("Aparesco")
             btnDivMi.style.display = "none";
-            x.style.display = "block";
+            div3.style.display = "none";
         } else {
             // alert("Desaparesco")
-            btnDivMi.style.display = "block";
+            // btnDivMi.style.display = "block";
             img_rest.style.display = "block";
             img_stress.style.display = "block";
             cbo.style.display = "block";
+            div3.style.display = "block";
             
             pointRest.style.display = "none";
-            pointStress.style.display = "none"
-            x.style.display = "none";
+            pointStress.style.display = "none";
+            div1.style.display = "none";
+            myDiv.style.display = "none";
+            
         }
     }else{
-        alert("No se puede realizar la division, falta seleccionar un punto ")
+        alert("The division cannot be performed, a point has not been selected.");
     }
      
 });
@@ -661,12 +692,12 @@ $("#btnConf").click(function(){
 
 function subdivimage(partImage){
     var json = JSON.parse(partImage)
-    $('#img_rest').html("")
-    $('#img_stress').html("")
-    $('#pos_rest').html("")
-    $('#pos_stress').html("")
-    $('#pos_rest').append(json.pos_actualRest)
-    $('#pos_stress').append(json.pos_actualStress)
+    $('#img_rest').html("");
+    $('#img_stress').html("");
+    $('#pos_rest').html("");
+    $('#pos_stress').html("");
+    $('#pos_rest').append(json.pos_actualRest);
+    $('#pos_stress').append(json.pos_actualStress);
 
     if (json.urlRest!=null || json.urlStress!=null){
 
@@ -685,8 +716,8 @@ $('#cboPart').on('change', function()
         if (zona  == null){
             zona = "1";
         }
-        fd.append("zona", zona)
-        fd.append("particion", this.value)
+        fd.append("zona", zona);
+        fd.append("particion", this.value);
 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -698,5 +729,86 @@ $('#cboPart').on('change', function()
         xhr.send(fd);
 });
 
+function savedata(id_p){
+
+    var json = JSON.parse(id_p);
+    //var id_act = json.id_patient;
+    //$('#id_patient').html("");
+    $('#id_patient').append(json.id_patient);
+
+
+}
+
+function savedatadivide(d){
+
+    var json = JSON.parse(d);
+    //$('#id_patient').append(json.id_patient);
+
+}
+
+var id_obt;
+$("#btnSave").click(function(){
+
+    id_obt = Number(document.getElementById('id_patient').value);
+    var fd = new FormData();
+
+    fd.append("id_patient", id_obt);
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+       savedata(this.responseText);
+    }
+    };
+     xhr.open('POST', 'saveData.ajax', true);
+     xhr.send(fd); 
+
+     btnSaveClick = true;
+
+     $("#btnSave").prop('disabled', true);
+
+});
+
+$("#btnComplete").click(function(){
+
+    var fd = new FormData();
+    id_obt = Number(document.getElementById('id_patient').value);
+
+    if( btnSaveClick == true ){
+
+        var div1 = document.getElementById("div1");
+        var div3 = document.getElementById("div3");
+        var btnDivMi = document.getElementById("btnDivMi");
+
+        fd.append("id_patient", id_obt);
+        
+        div3.style.display = "none";
+        btnDivMi.style.display = "none";
+        div1.style.display = "block";
+        
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+           savedatadivide(this.responseText);
+        }
+        };
+        xhr.open('POST', 'saveDataDivide.ajax', true);
+        xhr.send(fd); 
+
+    }else{
+
+        alert("Before doing the division, please press save data.");
+
+    }
+
+});
+
+function deletedata(ctx){
+
+    var json = JSON.parse(ctx);
+    //$('#id_patient').append(json.id_patient);
+
+}
 
 });

@@ -1,0 +1,52 @@
+{% extends "mf_webApp/base.html" %}
+
+{% block title %} Results  divide list {% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<br>
+<h2>Result Divide List</h2>
+<table class="table table-hover" width=80%>
+    <tr class="table-info">
+      <td>ID</td>
+      <td>Zone</td>
+      <td>Partition</td>
+      <td>Area rest </td>
+      <td>Peak rest</td>
+      <td>Slope rest</td>
+      <td>Area stress </td>
+      <td>Peak stress</td>
+      <td>Slope stress</td>
+      <td>Coefficient</td>
+      <td>ID patient</td>
+      <td>Patient</td>
+    </tr>
+    {% if curvasd %}
+    {% for curvad in curvasd %}
+    <tr >
+      <td>{{ curvad.id }}</td>
+      <td>{{ curvad.zone }}</td>
+      <td>{{ curvad.partition }}</td>
+      <td>{{ curvad.area_rest }}</td>
+      <td>{{ curvad.peak_rest }}</td>
+      <td>{{ curvad.slope_rest }}</td>
+      <td>{{ curvad.area_stress }}</td>
+      <td>{{ curvad.peak_stress }}</td>
+      <td>{{ curvad.slope_stress }}</td>
+      <td>{{ curvad.coefficent }}</td>
+      <td>{{ curvad.id_patient.id }}</td>
+      <td>{{ curvad.id_patient.patient }}</td>
+    </tr>
+    {% endfor %}
+
+    {% else %}
+    <h1>No results</h1>
+    {% endif %}
+</table>
+<br>
+
+<a class="btn btn-primary " href="javascript: history.go(-1)">Back</a>
+<br>
+{% endblock %}
