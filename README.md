@@ -5,7 +5,6 @@ API prototype for myocardial magnetic resonance image visualization and segmenta
 
 # 1. Demo 
 
-To execute the application run "test.py", you can run it via terminal commands or some IDE like PyCharm.
 
 for terminal commands example:
 
